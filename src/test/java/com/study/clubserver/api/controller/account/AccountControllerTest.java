@@ -50,4 +50,14 @@ class AccountControllerTest {
            .andExpect(jsonPath("$.success").value(true));
   }
 
+  @Test
+  @DisplayName("로그인 API - success")
+  public void login() throws Exception {
+    mockMvc.perform(post("/api/login")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(""))
+           .andDo(print())
+           .andExpect(status().isOk());
+  }
+
 }
