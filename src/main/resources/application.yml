@@ -16,6 +16,8 @@ spring:
         show_sql: true
         format_sql: true
 
+logging.level.root: INFO
+
 jwt:
   token:
     header: Authorization

@@ -14,7 +14,6 @@ import com.study.clubserver.security.JwtAuthentication;
 import com.study.clubserver.security.JwtAuthenticationToken;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -52,7 +51,9 @@ public class AccountController {
 
   @GetMapping("/profile")
   public ApiResult profile(@AuthenticationPrincipal JwtAuthentication authentication) {
-    return OK(null);
+    return OK(
+      new AccountDto(accountService.getUserProfile(authentication))
+    );
   }
 
 }

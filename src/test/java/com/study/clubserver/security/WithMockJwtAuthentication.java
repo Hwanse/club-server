@@ -14,6 +14,6 @@ public @interface WithMockJwtAuthentication {
 
   String email() default "hwanse@email.com";
 
-  String role() default "USER";
+  String role() default "ROLE_USER";
 
 }

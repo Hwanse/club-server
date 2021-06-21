@@ -12,6 +12,14 @@ public enum RoleType {
     this.roleName = roleName;
   }
 
+  public String getLabel() {
+    return label;
+  }
+
+  public String getRoleName() {
+    return roleName;
+  }
+
   static class RoleName {
     public static final String MEMBER = "ROLE_MEMBER";
     public static final String MANAGER = "ROLE_MANAGER";

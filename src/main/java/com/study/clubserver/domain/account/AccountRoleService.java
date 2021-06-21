@@ -11,7 +11,7 @@ public class AccountRoleService {
   private final AccountRoleRepository accountRoleRepository;
 
   public void addRole(Account account, RoleType roleType) {
-    accountRoleRepository.save(new AccountRole(account, roleType.name()));
+    accountRoleRepository.save(new AccountRole(account, roleType.getRoleName()));
   }
 
 }

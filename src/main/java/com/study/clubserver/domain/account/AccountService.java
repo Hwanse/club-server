@@ -1,6 +1,7 @@
 package com.study.clubserver.domain.account;
 
 import com.study.clubserver.domain.role.RoleType;
+import com.study.clubserver.security.JwtAuthentication;
 import com.study.clubserver.security.UserContext;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,12 @@ public class AccountService implements UserDetailsService {
     return accountRepository.findByUserId(userId)
                             .map(account -> createUserContext(account))
                             .orElseThrow(() -> new UsernameNotFoundException(userId + " 해당 계정을 찾을 수 없습니다."));
+  }
+
+  @Transactional(readOnly = true)
+  public Account getUserProfile(JwtAuthentication authentication) {
+    Account account = accountRepository.findByUserId(authentication.getUserId()).get();
+    return account;
   }
 
   private UserContext createUserContext(Account account) {

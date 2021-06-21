@@ -22,10 +22,8 @@ public class JwtAuthentication {
   }
 
   public JwtAuthentication(Account account) {
-    this.userId = account.getUserId();
-    this.email = account.getEmail();
-    this.username = account.getName();
-    this.roles = account.getAccountRole().getRoleName();
+    this(account.getUserId(), account.getEmail(), account.getName()
+        , account.getAccountRole().getRoleName());
   }
 
 }
