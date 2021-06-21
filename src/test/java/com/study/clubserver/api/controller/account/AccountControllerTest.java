@@ -12,6 +12,7 @@ import com.study.clubserver.api.dto.account.LoginRequest;
 import com.study.clubserver.domain.account.Account;
 import com.study.clubserver.domain.account.AccountService;
 import com.study.clubserver.domain.role.RoleType;
+import com.study.clubserver.security.WithMockJwtAuthentication;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -89,8 +90,9 @@ class AccountControllerTest {
 
   @Test
   @DisplayName("유저 정보 조회 API - success")
+  @WithMockJwtAuthentication
   @Order(3)
-  public void userInfo() throws Exception {
+  public void profile() throws Exception {
     mockMvc.perform(get("/api/profile"))
            .andDo(print())
            .andExpect(status().isOk());

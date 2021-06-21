@@ -10,13 +10,16 @@ import com.study.clubserver.api.dto.account.TokenDto;
 import com.study.clubserver.domain.account.Account;
 import com.study.clubserver.domain.account.AccountService;
 import com.study.clubserver.security.Jwt;
+import com.study.clubserver.security.JwtAuthentication;
 import com.study.clubserver.security.JwtAuthenticationToken;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,6 +48,11 @@ public class AccountController {
     String jwt = (String) authenticated.getDetails();
 
     return OK(new TokenDto(String.format("%s %s", Jwt.BEARER, jwt)));
+  }
+
+  @GetMapping("/profile")
+  public ApiResult profile(@AuthenticationPrincipal JwtAuthentication authentication) {
+    return OK(null);
   }
 
 }
