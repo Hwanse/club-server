@@ -2,17 +2,16 @@ package com.study.clubserver.domain.account;
 
 import com.study.clubserver.api.dto.account.JoinRequest;
 import com.study.clubserver.domain.CommonEntity;
-import com.study.clubserver.domain.role.RoleType;
-import java.util.HashSet;
-import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class Account extends CommonEntity {
 
   @Column(unique = true, nullable = false, length = 100)
@@ -39,6 +38,13 @@ public class Account extends CommonEntity {
     this.email = joinRequest.getEmail();
     this.password = joinRequest.getPassword();
     this.name = joinRequest.getName();
+  }
+
+  public Account(String userId, String email, String password, String name) {
+    this.userId = userId;
+    this.email = email;
+    this.password = password;
+    this.name = name;
   }
 
   public void encodePassword(String encodedPassword) {

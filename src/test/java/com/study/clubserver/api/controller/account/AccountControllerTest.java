@@ -8,7 +8,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.study.clubserver.api.dto.account.JoinRequest;
+import com.study.clubserver.api.dto.account.LoginRequest;
+import com.study.clubserver.domain.account.Account;
+import com.study.clubserver.domain.account.AccountService;
 import com.study.clubserver.domain.role.RoleType;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,16 +32,26 @@ class AccountControllerTest {
   @Autowired
   ObjectMapper objectMapper;
 
+  @Autowired
+  private AccountService accountService;
+
+  private String userId = "hwanse";
+  private String username = "hwanse";
+  private String password = "hwanse";
+  private String email = "hwanse@email.com";
+
   @Test
   @DisplayName("회원가입 API - success")
   public void join() throws Exception {
+    // given
     JoinRequest request = JoinRequest.builder()
-                                   .userId("hwanse")
-                                   .email("hwanse@email.com")
-                                   .name("hwanse")
-                                   .password("hwanse")
-                                   .build();
+                                     .userId("test")
+                                     .email("test@email.com")
+                                     .name("test")
+                                     .password("test")
+                                     .build();
 
+    // when & then
     mockMvc.perform(post("/api/join")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request)))
@@ -53,11 +68,20 @@ class AccountControllerTest {
   @Test
   @DisplayName("로그인 API - success")
   public void login() throws Exception {
+    // given
+    Account account = new Account(userId, email, username, password);
+    accountService.join(account);
+    LoginRequest loginRequest = new LoginRequest(userId, password);
+
+    // when & then
     mockMvc.perform(post("/api/login")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(""))
+                    .content(objectMapper.writeValueAsString(loginRequest)))
            .andDo(print())
-           .andExpect(status().isOk());
+           .andExpect(status().isOk())
+           .andExpect(jsonPath("$.data").exists())
+           .andExpect(jsonPath("$.data.token").exists())
+           .andExpect(jsonPath("$.success").value(true));
   }
 
 }
