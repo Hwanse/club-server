@@ -1,6 +1,6 @@
 package com.study.clubserver.api.controller.account;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -12,14 +12,17 @@ import com.study.clubserver.api.dto.account.LoginRequest;
 import com.study.clubserver.domain.account.Account;
 import com.study.clubserver.domain.account.AccountService;
 import com.study.clubserver.domain.role.RoleType;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.TestExecutionEvent;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
@@ -42,13 +45,14 @@ class AccountControllerTest {
 
   @Test
   @DisplayName("회원가입 API - success")
+  @Order(1)
   public void join() throws Exception {
     // given
     JoinRequest request = JoinRequest.builder()
-                                     .userId("test")
-                                     .email("test@email.com")
-                                     .name("test")
-                                     .password("test")
+                                     .userId(userId)
+                                     .email(email)
+                                     .name(username)
+                                     .password(password)
                                      .build();
 
     // when & then
@@ -67,10 +71,9 @@ class AccountControllerTest {
 
   @Test
   @DisplayName("로그인 API - success")
+  @Order(2)
   public void login() throws Exception {
     // given
-    Account account = new Account(userId, email, username, password);
-    accountService.join(account);
     LoginRequest loginRequest = new LoginRequest(userId, password);
 
     // when & then
@@ -82,6 +85,15 @@ class AccountControllerTest {
            .andExpect(jsonPath("$.data").exists())
            .andExpect(jsonPath("$.data.token").exists())
            .andExpect(jsonPath("$.success").value(true));
+  }
+
+  @Test
+  @DisplayName("유저 정보 조회 API - success")
+  @Order(3)
+  public void userInfo() throws Exception {
+    mockMvc.perform(get("/api/profile"))
+           .andDo(print())
+           .andExpect(status().isOk());
   }
 
 }
