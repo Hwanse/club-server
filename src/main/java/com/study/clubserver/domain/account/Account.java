@@ -1,10 +1,10 @@
 package com.study.clubserver.domain.account;
 
+import com.study.clubserver.api.dto.account.JoinRequest;
 import com.study.clubserver.domain.CommonEntity;
-import com.study.clubserver.domain.club.ClubAccount;
+import com.study.clubserver.domain.role.RoleType;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
@@ -31,7 +31,21 @@ public class Account extends CommonEntity {
 
   private boolean isJoined;
 
-  @OneToMany(mappedBy = "account")
-  private Set<AccountRole> accountRole = new HashSet<>();
+  @OneToOne(mappedBy = "account")
+  private AccountRole accountRole;
 
+  public Account(JoinRequest joinRequest) {
+    this.userId = joinRequest.getUserId();
+    this.email = joinRequest.getEmail();
+    this.password = joinRequest.getPassword();
+    this.name = joinRequest.getName();
+  }
+
+  public void encodePassword(String encodedPassword) {
+    this.password = encodedPassword;
+  }
+
+  public void role(AccountRole accountRole) {
+    this.accountRole = accountRole;
+  }
 }
