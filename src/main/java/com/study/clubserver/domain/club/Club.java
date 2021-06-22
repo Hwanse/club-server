@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Lob;
@@ -34,19 +35,19 @@ public class Club extends CommonEntity {
   @Lob
   private String bannerImageUrl;
 
-  @OneToMany(mappedBy = "club")
+  @OneToMany(mappedBy = "club", cascade = CascadeType.ALL)
   private List<ClubAccount> members = new ArrayList<>();
 
-  @OneToMany(mappedBy = "club")
+  @OneToMany(mappedBy = "club", cascade = CascadeType.ALL)
   private List<Meeting> meetings = new ArrayList<>();
 
-  @OneToMany(mappedBy = "club")
+  @OneToMany(mappedBy = "club", cascade = CascadeType.ALL)
   private Set<ClubInterests> interests = new HashSet<>();
 
-  @OneToMany(mappedBy = "club")
+  @OneToMany(mappedBy = "club", cascade = CascadeType.ALL)
   private Set<ClubZone> zones = new HashSet<>();
 
-  @OneToMany(mappedBy = "club")
+  @OneToMany(mappedBy = "club", cascade = CascadeType.ALL)
   private List<Board> boards = new ArrayList<>();
 
 }

@@ -5,6 +5,7 @@ import com.study.clubserver.domain.club.Club;
 import com.study.clubserver.domain.club.ClubAccount;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -33,7 +34,7 @@ public class Board extends CommonEntity {
   @JoinColumn(name = "club_id", nullable = false)
   private Club club;
 
-  @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<Comment> comments = new ArrayList<>();
 
 }
