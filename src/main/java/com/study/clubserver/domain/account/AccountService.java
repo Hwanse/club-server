@@ -36,26 +36,26 @@ public class AccountService implements UserDetailsService {
 
   @Override
   public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-    return accountRepository.findByUserId(userId)
+    return accountRepository.findWithAccountRoleByUserId(userId)
                             .map(account -> createUserContext(account))
                             .orElseThrow(() -> new UsernameNotFoundException(userId + " 해당 계정을 찾을 수 없습니다."));
   }
 
   @Transactional(readOnly = true)
   public Account getUserProfile(JwtAuthentication authentication) {
-    Account account = accountRepository.findByUserId(authentication.getUserId()).get();
-    return account;
-  }
-
-  private UserContext createUserContext(Account account) {
-    SimpleGrantedAuthority authority = new SimpleGrantedAuthority(account.getAccountRole().getRoleName());
-    Set<SimpleGrantedAuthority> grantedAuthorities = Set.of(authority);
-    return new UserContext(account, grantedAuthorities);
+    return accountRepository.findWithAccountRoleByUserId(authentication.getUserId())
+                            .orElseThrow(() -> new UsernameNotFoundException(authentication.getUserId() + " 해당 계정을 찾을 수 없습니다."));
   }
 
   public String login(Authentication authenticationToken) {
     Authentication authentication = authenticationManager.authenticate(authenticationToken);
     SecurityContextHolder.getContext().setAuthentication(authentication);
     return (String) authentication.getDetails();
+  }
+
+  private UserContext createUserContext(Account account) {
+    SimpleGrantedAuthority authority = new SimpleGrantedAuthority(account.getAccountRole().getRoleName());
+    Set<SimpleGrantedAuthority> grantedAuthorities = Set.of(authority);
+    return new UserContext(account, grantedAuthorities);
   }
 }
