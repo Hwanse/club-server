@@ -41,12 +41,10 @@ public class AccountController {
   @PostMapping("/login")
   public ApiResult login(@Valid @RequestBody LoginRequest loginRequest) {
     Authentication authenticationToken = new JwtAuthenticationToken(loginRequest.getUserId(), loginRequest.getPassword());
-    Authentication authenticated = authenticationManager.authenticate(authenticationToken);
-
-    SecurityContextHolder.getContext().setAuthentication(authenticated);
-    String jwt = (String) authenticated.getDetails();
-
-    return OK(new TokenDto(String.format("%s %s", Jwt.BEARER, jwt)));
+    String jwt = accountService.login(authenticationToken);
+    return OK(
+      new TokenDto(String.format("%s %s", Jwt.BEARER, jwt))
+    );
   }
 
   @GetMapping("/profile")

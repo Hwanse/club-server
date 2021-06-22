@@ -1,11 +1,15 @@
 package com.study.clubserver.domain.account;
 
 import com.study.clubserver.domain.role.RoleType;
+import com.study.clubserver.security.Jwt;
 import com.study.clubserver.security.JwtAuthentication;
 import com.study.clubserver.security.UserContext;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,6 +25,7 @@ public class AccountService implements UserDetailsService {
   private final AccountRepository accountRepository;
   private final AccountRoleService accountRoleService;
   private final PasswordEncoder passwordEncoder;
+  private final AuthenticationManager authenticationManager;
 
   public Account join(Account account) {
     account.encodePassword(passwordEncoder.encode(account.getPassword()));
@@ -48,4 +53,9 @@ public class AccountService implements UserDetailsService {
     return new UserContext(account, grantedAuthorities);
   }
 
+  public String login(Authentication authenticationToken) {
+    Authentication authentication = authenticationManager.authenticate(authenticationToken);
+    SecurityContextHolder.getContext().setAuthentication(authentication);
+    return (String) authentication.getDetails();
+  }
 }
