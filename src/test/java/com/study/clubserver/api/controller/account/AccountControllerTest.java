@@ -19,6 +19,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
 
 class AccountControllerTest extends BaseControllerTest {
@@ -62,9 +63,10 @@ class AccountControllerTest extends BaseControllerTest {
     // when & then
     mockMvc.perform(post("/join")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(request)))
+                    .content(objectMapper.writeValueAsString(request))
+                    .accept(MediaTypes.HAL_JSON_VALUE))
            .andDo(print())
-           .andExpect(status().isOk())
+           .andExpect(status().isCreated())
            .andExpect(jsonPath("$.data").exists())
            .andExpect(jsonPath("$.data.userId").exists())
            .andExpect(jsonPath("$.data.email").exists())

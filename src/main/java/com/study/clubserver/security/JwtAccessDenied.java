@@ -1,10 +1,11 @@
 package com.study.clubserver.security;
 
 
-import static com.study.clubserver.api.common.ApiResult.ERROR;
+
+import static com.study.clubserver.api.dto.ApiResult.ERROR;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.study.clubserver.api.common.ApiResult;
+import com.study.clubserver.api.dto.ApiResult;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

@@ -1,9 +1,9 @@
 package com.study.clubserver.api.controller.club;
 
-import static com.study.clubserver.api.common.ApiResult.*;
+import static com.study.clubserver.api.dto.ApiResult.OK;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
-import com.study.clubserver.api.common.ApiResult;
+import com.study.clubserver.api.dto.ApiResult;
 import com.study.clubserver.api.dto.club.ClubCreateRequest;
 import com.study.clubserver.api.dto.club.ClubDto;
 import com.study.clubserver.domain.account.Account;
@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,5 +37,6 @@ public class ClubController {
                            OK(new ClubDto(club))
                          );
   }
+
 
 }

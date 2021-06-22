@@ -1,4 +1,4 @@
-package com.study.clubserver.api.common;
+package com.study.clubserver.api.dto;
 
 import lombok.Getter;
 import lombok.Setter;

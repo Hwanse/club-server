@@ -1,8 +1,10 @@
 package com.study.clubserver.api.controller.account;
 
-import static com.study.clubserver.api.common.ApiResult.OK;
+import static com.study.clubserver.api.dto.ApiResult.OK;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import com.study.clubserver.api.common.ApiResult;
+import com.study.clubserver.api.dto.ApiResult;
 import com.study.clubserver.api.dto.account.AccountDto;
 import com.study.clubserver.api.dto.account.JoinRequest;
 import com.study.clubserver.api.dto.account.LoginRequest;
@@ -14,6 +16,8 @@ import com.study.clubserver.security.Jwt;
 import com.study.clubserver.security.JwtAuthenticationToken;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,18 +33,21 @@ public class AccountController {
   private final AuthenticationManager authenticationManager;
 
   @PostMapping("/join")
-  public ApiResult join(@RequestBody JoinRequest joinRequest) {
+  public ResponseEntity join(@RequestBody JoinRequest joinRequest) {
     Account account = accountService.join(new Account(joinRequest));
-    return OK(new AccountDto(account));
+    WebMvcLinkBuilder linkBuilder = linkTo(methodOn(AccountController.class).profile(account));
+    return ResponseEntity.created(linkBuilder.toUri())
+                         .body(
+                           OK(new AccountDto(account))
+                         );
+
   }
 
   @PostMapping("/login")
   public ApiResult login(@Valid @RequestBody LoginRequest loginRequest) {
     Authentication authenticationToken = new JwtAuthenticationToken(loginRequest.getUserId(), loginRequest.getPassword());
     String jwt = accountService.login(authenticationToken);
-    return OK(
-      new TokenDto(String.format("%s %s", Jwt.BEARER, jwt))
-    );
+    return OK(new TokenDto(String.format("%s %s", Jwt.BEARER, jwt)));
   }
 
   @GetMapping("/profile")
