@@ -28,7 +28,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   public void configure(WebSecurity web) throws Exception {
     web.ignoring()
-       .mvcMatchers("/api/join", "/api/login")
+       .mvcMatchers("/join", "/login")
        .mvcMatchers("/docs/index.html")
        .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
   }

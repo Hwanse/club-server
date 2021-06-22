@@ -60,7 +60,7 @@ class AccountControllerTest extends BaseControllerTest {
                                      .build();
 
     // when & then
-    mockMvc.perform(post("/api/join")
+    mockMvc.perform(post("/join")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request)))
            .andDo(print())
@@ -80,7 +80,7 @@ class AccountControllerTest extends BaseControllerTest {
     LoginRequest loginRequest = new LoginRequest(id, password);
 
     // when & then
-    mockMvc.perform(post("/api/login")
+    mockMvc.perform(post("/login")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(loginRequest)))
            .andDo(print())
@@ -94,7 +94,7 @@ class AccountControllerTest extends BaseControllerTest {
   @DisplayName("유저 정보 조회 API - success")
   @WithMockJwtAuthentication
   public void profile() throws Exception {
-    mockMvc.perform(get("/api/profile"))
+    mockMvc.perform(get("/profile"))
            .andDo(print())
            .andExpect(status().isOk())
            .andExpect(jsonPath("$.data").exists())

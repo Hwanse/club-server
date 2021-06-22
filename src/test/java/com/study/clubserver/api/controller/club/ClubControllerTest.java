@@ -36,7 +36,9 @@ class ClubControllerTest extends BaseControllerTest {
 
   @AfterEach
   public void clear() {
-    accountRepository.deleteAll();
+    accountRepository.findAll().forEach(
+      account -> account.deleteRole()
+    );
   }
 
   @Test
