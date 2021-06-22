@@ -22,8 +22,6 @@ public class ClubAccount extends CommonEntity {
   @JoinColumn(name = "account_id", nullable = false)
   private Account account;
 
-  private boolean isLiked;
-
   @OneToOne(mappedBy = "clubAccount")
   private ClubAccountRole clubAccountRole;
 

@@ -16,6 +16,7 @@ import com.study.clubserver.security.Jwt;
 import com.study.clubserver.security.JwtAuthenticationToken;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,7 +33,7 @@ public class AccountController {
   private final AccountService accountService;
   private final AuthenticationManager authenticationManager;
 
-  @PostMapping("/join")
+  @PostMapping(value = "/join", produces = MediaTypes.HAL_JSON_VALUE)
   public ResponseEntity join(@RequestBody JoinRequest joinRequest) {
     Account account = accountService.join(new Account(joinRequest));
     WebMvcLinkBuilder linkBuilder = linkTo(methodOn(AccountController.class).profile(account));

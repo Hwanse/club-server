@@ -1,9 +1,10 @@
 package com.study.clubserver.config;
 
-import com.study.clubserver.domain.role.RoleRepository;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.study.clubserver.domain.role.RoleService;
 import com.study.clubserver.domain.role.RoleType;
 import java.util.Arrays;
+import javax.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -23,6 +24,10 @@ public class AppConfig implements ApplicationRunner {
     return PasswordEncoderFactories.createDelegatingPasswordEncoder();
   }
 
+  @Bean
+  public JPAQueryFactory jpaQueryFactory(EntityManager entityManager) {
+    return new JPAQueryFactory(entityManager);
+  }
 
   @Override
   public void run(ApplicationArguments args) throws Exception {

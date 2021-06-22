@@ -18,6 +18,8 @@
     <java.version>11</java.version>
     <jwt.version>0.11.2</jwt.version>
     <p6spy.version>1.7.1</p6spy.version>
+    <querydsl.version>4.4.0</querydsl.version>
+    <h2.version>1.4.199</h2.version>
   </properties>
   <dependencies>
     <dependency>
@@ -70,6 +72,17 @@
       <artifactId>p6spy-spring-boot-starter</artifactId>
       <version>${p6spy.version}</version>
     </dependency>
+    <!-- queryDsl -->
+    <dependency>
+      <groupId>com.querydsl</groupId>
+      <artifactId>querydsl-apt</artifactId>
+      <version>${querydsl.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.querydsl</groupId>
+      <artifactId>querydsl-jpa</artifactId>
+      <version>${querydsl.version}</version>
+    </dependency>
 
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -111,6 +124,25 @@
 
   <build>
     <plugins>
+      <!-- queryDsl -->
+      <plugin>
+        <groupId>com.mysema.maven</groupId>
+        <artifactId>apt-maven-plugin</artifactId>
+        <version>1.1.3</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>process</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>target/generated-sources/java</outputDirectory>
+              <processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- restdocs -->
       <plugin>
         <groupId>org.asciidoctor</groupId>
         <artifactId>asciidoctor-maven-plugin</artifactId>

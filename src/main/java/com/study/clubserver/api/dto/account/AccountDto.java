@@ -8,6 +8,8 @@ import lombok.Setter;
 @Setter
 public class AccountDto {
 
+  private Long accountId;
+
   private String userId;
 
   private String email;

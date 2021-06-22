@@ -29,8 +29,6 @@ public class Account extends CommonEntity {
 
   private String refreshToken;
 
-  private boolean isJoined;
-
   @OneToOne(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
   private AccountRole accountRole;
 
