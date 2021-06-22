@@ -42,9 +42,9 @@ public class AccountService implements UserDetailsService {
   }
 
   @Transactional(readOnly = true)
-  public Account getUserProfile(JwtAuthentication authentication) {
-    return accountRepository.findWithAccountRoleByUserId(authentication.getUserId())
-                            .orElseThrow(() -> new UsernameNotFoundException(authentication.getUserId() + " 해당 계정을 찾을 수 없습니다."));
+  public Account getUserProfile(Account account) {
+    return accountRepository.findWithAccountRoleByUserId(account.getUserId())
+                            .orElseThrow(() -> new UsernameNotFoundException(account.getUserId() + " 해당 계정을 찾을 수 없습니다."));
   }
 
   public String login(Authentication authenticationToken) {

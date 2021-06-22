@@ -9,6 +9,7 @@ import com.study.clubserver.api.dto.account.LoginRequest;
 import com.study.clubserver.api.dto.account.TokenDto;
 import com.study.clubserver.domain.account.Account;
 import com.study.clubserver.domain.account.AccountService;
+import com.study.clubserver.security.CurrentAccount;
 import com.study.clubserver.security.Jwt;
 import com.study.clubserver.security.JwtAuthentication;
 import com.study.clubserver.security.JwtAuthenticationToken;
@@ -48,9 +49,9 @@ public class AccountController {
   }
 
   @GetMapping("/profile")
-  public ApiResult profile(@AuthenticationPrincipal JwtAuthentication authentication) {
+  public ApiResult profile(@CurrentAccount Account account) {
     return OK(
-      new AccountDto(accountService.getUserProfile(authentication))
+      new AccountDto(accountService.getUserProfile(account))
     );
   }
 

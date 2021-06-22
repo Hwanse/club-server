@@ -2,6 +2,7 @@ package com.study.clubserver.domain.account;
 
 import com.study.clubserver.api.dto.account.JoinRequest;
 import com.study.clubserver.domain.CommonEntity;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
@@ -30,7 +31,7 @@ public class Account extends CommonEntity {
 
   private boolean isJoined;
 
-  @OneToOne(mappedBy = "account")
+  @OneToOne(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
   private AccountRole accountRole;
 
   public Account(JoinRequest joinRequest) {
@@ -54,4 +55,9 @@ public class Account extends CommonEntity {
   public void role(AccountRole accountRole) {
     this.accountRole = accountRole;
   }
+
+  public void deleteRole() {
+    this.accountRole = null;
+  }
+
 }

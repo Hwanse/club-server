@@ -7,9 +7,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class ClubAccount extends CommonEntity {
 
   @ManyToOne
@@ -22,7 +24,16 @@ public class ClubAccount extends CommonEntity {
 
   private boolean isLiked;
 
-  @OneToOne
+  @OneToOne(mappedBy = "clubAccount")
   private ClubAccountRole clubAccountRole;
 
+  public ClubAccount(Club club, Account account) {
+    this.club = club;
+    this.account = account;
+    club.getMembers().add(this);
+  }
+
+  public void clubAccountRole(ClubAccountRole clubAccountRole) {
+    this.clubAccountRole = clubAccountRole;
+  }
 }

@@ -1,5 +1,6 @@
 package com.study.clubserver.security;
 
+import com.study.clubserver.domain.account.Account;
 import java.util.Set;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;

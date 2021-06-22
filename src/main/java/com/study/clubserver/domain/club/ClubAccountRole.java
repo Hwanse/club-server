@@ -7,10 +7,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class ClubAccountRole {
 
   @Id
@@ -21,8 +24,13 @@ public class ClubAccountRole {
   @JoinColumn(name = "club_role_id")
   private Role clubRole;
 
-  @OneToOne(mappedBy = "clubAccountRole")
+  @OneToOne
   @JoinColumn(name = "club_account_id")
   private ClubAccount clubAccount;
 
+  public ClubAccountRole(Role clubRole, ClubAccount clubAccount) {
+    this.clubRole = clubRole;
+    this.clubAccount = clubAccount;
+    clubAccount.clubAccountRole(this);
+  }
 }

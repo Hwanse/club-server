@@ -1,4 +1,4 @@
-package com.study.clubserver.config;
+package com.study.clubserver.config.security;
 
 import com.study.clubserver.security.Jwt;
 import com.study.clubserver.security.JwtAccessDenied;

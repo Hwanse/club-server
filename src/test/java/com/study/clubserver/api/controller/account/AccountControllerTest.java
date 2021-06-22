@@ -6,7 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.study.clubserver.api.controller.BaseControllerTest;
 import com.study.clubserver.api.dto.account.JoinRequest;
 import com.study.clubserver.api.dto.account.LoginRequest;
 import com.study.clubserver.domain.account.Account;
@@ -14,28 +14,14 @@ import com.study.clubserver.domain.account.AccountRepository;
 import com.study.clubserver.domain.account.AccountService;
 import com.study.clubserver.domain.role.RoleType;
 import com.study.clubserver.security.WithMockJwtAuthentication;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.test.web.servlet.MockMvc;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@TestInstance(Lifecycle.PER_CLASS)
-class AccountControllerTest {
-
-  @Autowired
-  MockMvc mockMvc;
-
-  @Autowired
-  ObjectMapper objectMapper;
+class AccountControllerTest extends BaseControllerTest {
 
   @Autowired
   AccountService accountService;
@@ -44,17 +30,24 @@ class AccountControllerTest {
   AccountRepository accountRepository;
 
   private String id = "hwanse";
+  private String password = "hwanse";
   private String email = "hwanse@email.com";
 
-  @BeforeAll
+  @BeforeEach
   public void setup() {
-    Account account = new Account(id, email, id, id);
+    Account account = new Account(id, email, password, id);
     accountService.join(account);
+  }
+
+  @AfterEach
+  public void clear() {
+    accountRepository.findAll().forEach(
+      account -> account.deleteRole()
+    );
   }
 
   @Test
   @DisplayName("회원가입 API - success")
-  @Rollback
   public void join() throws Exception {
     // given
     String testId = "test";
@@ -84,7 +77,7 @@ class AccountControllerTest {
   @DisplayName("로그인 API - success")
   public void login() throws Exception {
     // given
-    LoginRequest loginRequest = new LoginRequest(id, id);
+    LoginRequest loginRequest = new LoginRequest(id, password);
 
     // when & then
     mockMvc.perform(post("/api/login")

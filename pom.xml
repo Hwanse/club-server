@@ -17,6 +17,7 @@
   <properties>
     <java.version>11</java.version>
     <jwt.version>0.11.2</jwt.version>
+    <p6spy.version>1.7.1</p6spy.version>
   </properties>
   <dependencies>
     <dependency>
@@ -62,6 +63,12 @@
       <artifactId>jjwt-jackson</artifactId> <!-- or jjwt-gson if Gson is preferred -->
       <version>${jwt.version}</version>
       <scope>runtime</scope>
+    </dependency>
+    <!-- p6spy -->
+    <dependency>
+      <groupId>com.github.gavlyukovskiy</groupId>
+      <artifactId>p6spy-spring-boot-starter</artifactId>
+      <version>${p6spy.version}</version>
     </dependency>
 
     <dependency>
