@@ -28,7 +28,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   public void configure(WebSecurity web) throws Exception {
     web.ignoring()
-       .mvcMatchers("/h2/**")
        .mvcMatchers("/api/join", "/api/login")
        .mvcMatchers("/docs/index.html")
        .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
@@ -44,17 +43,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       // h2-console 은 iframe 을 사용하기 때문에 해당 옵션 비활성화
       .headers().frameOptions().disable()
       .and()
-      .addFilterBefore(new JwtAuthenticationFilter(jwt), UsernamePasswordAuthenticationFilter.class)
       .authorizeRequests()
-      .antMatchers("/login").permitAll()
-      .antMatchers("/signup").permitAll()
-      .antMatchers("/api/login").permitAll()
-      .antMatchers("/api/join").permitAll()
-      .anyRequest().authenticated()
+        .mvcMatchers("/h2-console/**").permitAll()
+        .anyRequest().authenticated()
       .and()
+      .addFilterBefore(new JwtAuthenticationFilter(jwt), UsernamePasswordAuthenticationFilter.class)
       .exceptionHandling()
-      .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-      .accessDeniedHandler(jwtAccessDenied);
+        .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+        .accessDeniedHandler(jwtAccessDenied);
   }
 
   @Override
