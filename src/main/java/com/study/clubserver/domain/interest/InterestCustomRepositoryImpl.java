@@ -8,7 +8,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class InterestCollectionCustomRepositoryImpl implements InterestCustomRepository{
+public class InterestCustomRepositoryImpl implements InterestCustomRepository {
 
   private final JPAQueryFactory factory;
 
