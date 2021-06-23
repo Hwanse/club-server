@@ -17,7 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 @EnableJpaAuditing
 @RequiredArgsConstructor
-public class AppConfig implements ApplicationRunner {
+public class AppConfig {
 
   private final RoleService roleService;
 
@@ -29,12 +29,6 @@ public class AppConfig implements ApplicationRunner {
   @Bean
   public JPAQueryFactory jpaQueryFactory(EntityManager entityManager) {
     return new JPAQueryFactory(entityManager);
-  }
-
-  @Override
-  public void run(ApplicationArguments args) throws Exception {
-    Arrays.stream(RoleType.values())
-          .forEach(roleType -> roleService.addRole(roleType));
   }
 
 }

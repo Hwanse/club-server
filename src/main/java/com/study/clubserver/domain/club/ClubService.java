@@ -46,7 +46,7 @@ public class ClubService {
 
     // 클럽 - 유저 관계 추가
     ClubAccount clubAccount = clubAccountRepository.save(new ClubAccount(savedClub, account));
-    // 클럽유저 - 권한 관계 추가
+    // 클럽유저 - 클럽내 유저 권한 관계 추가
     roleRepository.findByRoleType(RoleType.MANAGER)
                   .ifPresent(
                     role -> clubAccontRoleRepository.save(new ClubAccountRole(role, clubAccount))
