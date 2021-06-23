@@ -1,8 +1,10 @@
 package com.study.clubserver.api.dto.club;
 
+import java.util.List;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,5 +28,11 @@ public class ClubCreateRequest {
   private int limitMemberCount;
 
   private String bannerImageUrl;
+
+  @NotEmpty
+  private List<Long> interestList;
+
+  @NotEmpty
+  private List<Long> zoneList;
 
 }

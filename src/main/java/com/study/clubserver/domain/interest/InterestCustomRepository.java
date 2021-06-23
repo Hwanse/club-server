@@ -6,4 +6,6 @@ public interface InterestCustomRepository {
 
   List<Interest> findInterestsInInterestCollection(Long interestCollectionId);
 
+  List<Interest> findInterestsByIdList(List<Long> idList);
+
 }

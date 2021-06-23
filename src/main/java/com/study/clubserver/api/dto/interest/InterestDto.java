@@ -1,5 +1,6 @@
 package com.study.clubserver.api.dto.interest;
 
+import com.study.clubserver.domain.interest.ClubInterest;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,6 +16,11 @@ public class InterestDto {
 
   private String name;
 
-  private InterestCollectionDto interestCollection;
+  private Long interestCollectionId;
 
+  public InterestDto(ClubInterest clubInterest) {
+    this.id = clubInterest.getInterests().getId();
+    this.name = clubInterest.getInterests().getName();
+    this.interestCollectionId = clubInterest.getInterests().getInterestCollection().getId();
+  }
 }

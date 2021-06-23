@@ -12,6 +12,7 @@ import com.study.clubserver.domain.account.Account;
 import com.study.clubserver.domain.club.Club;
 import com.study.clubserver.domain.club.ClubService;
 import com.study.clubserver.security.WithMockJwtAuthentication;
+import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -46,6 +47,8 @@ class ClubControllerTest extends BaseControllerTest {
                                                  .title("클럽1")
                                                  .description("설명")
                                                  .limitMemberCount(10)
+                                                 .interestList(List.of(1L, 2L))
+                                                 .zoneList(List.of(101L, 102L))
                                                  .build();
     Account account = accountRepository.findWithAccountRoleByUserId("hwanse").get();
 
@@ -61,6 +64,8 @@ class ClubControllerTest extends BaseControllerTest {
                                                .title("클럽1")
                                                .description("설명")
                                                .limitMemberCount(10)
+                                               .interestList(List.of(2L, 3L))
+                                               .zoneList(List.of(101L, 102L))
                                                .build();
 
     // when & then

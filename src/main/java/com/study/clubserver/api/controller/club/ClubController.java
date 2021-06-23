@@ -19,6 +19,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,7 +36,11 @@ public class ClubController {
 
   @PostMapping(produces = MediaTypes.HAL_JSON_VALUE)
   public ResponseEntity createClub(@CurrentAccount Account account,
-    @Valid @RequestBody ClubCreateRequest request) {
+    @Valid @RequestBody ClubCreateRequest request, Errors errors) {
+    if (errors.hasErrors()) {
+      return ResponseEntity.badRequest().build();
+    }
+
     Club club = clubService.createClub(account, request);
 
     WebMvcLinkBuilder selfLinkBuilder = linkTo(

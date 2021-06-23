@@ -6,8 +6,14 @@ import com.study.clubserver.api.dto.club.ClubCreateRequest;
 import com.study.clubserver.api.dto.club.ClubDto;
 import com.study.clubserver.api.dto.club.ClubMembersDetailsDto;
 import com.study.clubserver.domain.account.Account;
+import com.study.clubserver.domain.interest.ClubInterest;
+import com.study.clubserver.domain.interest.ClubInterestRepository;
+import com.study.clubserver.domain.interest.InterestRepository;
 import com.study.clubserver.domain.role.RoleRepository;
 import com.study.clubserver.domain.role.RoleType;
+import com.study.clubserver.domain.zone.ClubZone;
+import com.study.clubserver.domain.zone.ClubZoneRepository;
+import com.study.clubserver.domain.zone.ZoneRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -28,17 +34,33 @@ public class ClubService {
   private final ClubAccontRoleRepository clubAccontRoleRepository;
   private final RoleRepository roleRepository;
 
+  private final InterestRepository interestRepository;
+  private final ClubInterestRepository clubInterestRepository;
+
+  private final ZoneRepository zoneRepository;
+  private final ClubZoneRepository clubZoneRepository;
+
   @Transactional
   public Club createClub(Account account, ClubCreateRequest request) {
-    Club club = new Club(request);
-    Club savedClub = clubRepository.save(club);
+    Club savedClub = clubRepository.save(new Club(request));
 
-    // clubAccount
+    // 클럽 - 유저 관계 추가
     ClubAccount clubAccount = clubAccountRepository.save(new ClubAccount(savedClub, account));
-    // clubAccountRole
+    // 클럽유저 - 권한 관계 추가
     roleRepository.findByRoleType(RoleType.MANAGER)
                   .ifPresent(
                     role -> clubAccontRoleRepository.save(new ClubAccountRole(role, clubAccount))
+                  );
+    // 클럽 - 주요 관심사 관계 설정
+    interestRepository.findInterestsByIdList(request.getInterestList())
+                      .forEach(
+                        interest -> clubInterestRepository.save(new ClubInterest(savedClub, interest))
+                      );
+
+    // 클럽 - 주요 지역 관계 설정
+    zoneRepository.findZonesByIdList(request.getZoneList())
+                  .forEach(
+                    zone -> clubZoneRepository.save(new ClubZone(savedClub, zone))
                   );
 
     savedClub.incrementMemberCount();

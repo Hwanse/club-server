@@ -6,11 +6,14 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "club_interests")
 @Getter
+@NoArgsConstructor
 public class ClubInterest extends CommonEntity {
 
   @ManyToOne
@@ -21,4 +24,9 @@ public class ClubInterest extends CommonEntity {
   @JoinColumn(name = "interests_id")
   private Interest interests;
 
+  public ClubInterest(Club club, Interest interests) {
+    this.club = club;
+    this.interests = interests;
+    club.getInterests().add(this);
+  }
 }
