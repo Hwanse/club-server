@@ -119,13 +119,23 @@ class ClubControllerTest extends BaseControllerTest {
     for (int i = 0; i < 30; i++) {
       setupClub();
     }
+    int page = 0;
+    int size = 10;
 
     // when & then
     mockMvc.perform(get("/api/clubs")
-                    .queryParam("page", "0")
-                    .queryParam("size", "10"))
+                    .queryParam("page", String.valueOf(page))
+                    .queryParam("size", String.valueOf(size)))
            .andDo(print())
-           .andExpect(status().isOk());
+           .andExpect(status().isOk())
+           .andExpect(jsonPath("$.data.content").exists())
+           .andExpect(jsonPath("$.data.totalPages").exists())
+           .andExpect(jsonPath("$.data.totalElements").exists())
+           .andExpect(jsonPath("$.data.size").value(size))
+           .andExpect(jsonPath("$.data.numberOfElements").value(size))
+           .andExpect(jsonPath("$.data.number").value(page))
+           .andExpect(jsonPath("$.data.first").exists())
+           .andExpect(jsonPath("$.data.last").exists());
   }
 
 }
