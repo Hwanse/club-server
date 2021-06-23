@@ -7,6 +7,7 @@ spring:
     url: jdbc:h2:mem:club-server
     username: sa
     password:
+    # 아래 classpath 경로에 있는 모든 data.sql 을 읽어 서버 구동시 데이터들을 초기화하는 설정
     data: classpath:db/*
   jpa:
     hibernate:
