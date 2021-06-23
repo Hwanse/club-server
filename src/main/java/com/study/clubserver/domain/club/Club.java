@@ -3,11 +3,9 @@ package com.study.clubserver.domain.club;
 import com.study.clubserver.api.dto.club.ClubCreateRequest;
 import com.study.clubserver.domain.CommonEntity;
 import com.study.clubserver.domain.board.Board;
-import com.study.clubserver.domain.interests.ClubInterests;
-import com.study.clubserver.domain.interests.Interests;
+import com.study.clubserver.domain.interest.ClubInterest;
 import com.study.clubserver.domain.meeting.Meeting;
 import com.study.clubserver.domain.zone.ClubZone;
-import com.study.clubserver.domain.zone.Zone;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -45,7 +43,7 @@ public class Club extends CommonEntity {
   private List<Meeting> meetings = new ArrayList<>();
 
   @OneToMany(mappedBy = "club", cascade = CascadeType.ALL)
-  private Set<ClubInterests> interests = new HashSet<>();
+  private Set<ClubInterest> interests = new HashSet<>();
 
   @OneToMany(mappedBy = "club", cascade = CascadeType.ALL)
   private Set<ClubZone> zones = new HashSet<>();

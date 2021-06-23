@@ -1,4 +1,4 @@
-package com.study.clubserver.domain.interests;
+package com.study.clubserver.domain.interest;
 
 import com.study.clubserver.domain.CommonEntity;
 import com.study.clubserver.domain.club.Club;
@@ -11,7 +11,7 @@ import lombok.Getter;
 @Entity
 @Table(name = "club_interests")
 @Getter
-public class ClubInterests extends CommonEntity {
+public class ClubInterest extends CommonEntity {
 
   @ManyToOne
   @JoinColumn(name = "club_id")
@@ -19,6 +19,6 @@ public class ClubInterests extends CommonEntity {
 
   @ManyToOne
   @JoinColumn(name = "interests_id")
-  private Interests interests;
+  private Interest interests;
 
 }
