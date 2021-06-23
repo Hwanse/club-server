@@ -28,6 +28,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   public void configure(WebSecurity web) throws Exception {
     web.ignoring()
+       .antMatchers("/h2-console/**")
        .mvcMatchers("/join", "/login")
        .mvcMatchers("/docs/index.html")
        .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
@@ -44,7 +45,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       .headers().frameOptions().disable()
       .and()
       .authorizeRequests()
-        .mvcMatchers("/h2-console/**").permitAll()
         .anyRequest().authenticated()
       .and()
       .addFilterBefore(new JwtAuthenticationFilter(jwt), UsernamePasswordAuthenticationFilter.class)
