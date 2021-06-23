@@ -11,6 +11,9 @@ import com.study.clubserver.domain.role.RoleType;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,22 +31,22 @@ public class ClubService {
   @Transactional
   public Club createClub(Account account, ClubCreateRequest request) {
     Club club = new Club(request);
-    clubRepository.save(club);
+    Club savedClub = clubRepository.save(club);
 
     // clubAccount
-    ClubAccount clubAccount = clubAccountRepository.save(new ClubAccount(club, account));
+    ClubAccount clubAccount = clubAccountRepository.save(new ClubAccount(savedClub, account));
     // clubAccountRole
     roleRepository.findByRoleType(RoleType.MANAGER)
                   .ifPresent(
                     role -> clubAccontRoleRepository.save(new ClubAccountRole(role, clubAccount))
                   );
 
-    club.incrementMemberCount();
+    savedClub.incrementMemberCount();
 
-    return club;
+    return savedClub;
   }
 
-  public ClubMembersDetailsDto getClubDetail(Long clubId, Account account) {
+  public ClubMembersDetailsDto getClubDetails(Long clubId, Account account) {
     Club club = clubRepository.findById(clubId).orElseThrow(IllegalArgumentException::new);
     if (! isContainsMember(club, account)) {
       throw new IllegalArgumentException();
@@ -65,9 +68,14 @@ public class ClubService {
                                      clubAccountsOfClub);
   }
 
+  public Page<ClubDto> getClubPage(Pageable pageable) {
+    Page<Club> clubPage = clubRepository.findClubsWithPaging(pageable);
+    List<ClubDto> clubDtos = clubPage.stream().map(ClubDto::new).collect(Collectors.toList());
+    return new PageImpl<>(clubDtos, clubPage.getPageable(), clubPage.getTotalElements());
+  }
+
   private boolean isContainsMember(Club club, Account account) {
     return clubAccountRepository.existsClubAccountByClubAndAccount(club, account);
   }
-
 
 }

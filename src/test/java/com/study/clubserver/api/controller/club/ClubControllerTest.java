@@ -11,16 +11,18 @@ import com.study.clubserver.api.dto.club.ClubCreateRequest;
 import com.study.clubserver.domain.account.Account;
 import com.study.clubserver.domain.account.AccountRepository;
 import com.study.clubserver.domain.account.AccountService;
+import com.study.clubserver.domain.club.Club;
 import com.study.clubserver.domain.club.ClubService;
 import com.study.clubserver.security.WithMockJwtAuthentication;
-import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
+import org.springframework.transaction.annotation.Transactional;
 
 class ClubControllerTest extends BaseControllerTest {
 
@@ -34,6 +36,7 @@ class ClubControllerTest extends BaseControllerTest {
   ClubService clubService;
 
   @BeforeEach
+  @Transactional
   public void setupUser() {
     Account account = new Account("hwanse", "hwanse@email.com",
                                   "hwanse", "hwanse");
@@ -41,13 +44,15 @@ class ClubControllerTest extends BaseControllerTest {
   }
 
   @AfterEach
+  @Transactional
   public void clear() {
     accountRepository.findAll().forEach(
       account -> account.deleteRole()
     );
+    accountRepository.deleteAll();
   }
 
-  private void setupClub() {
+  private Club setupClub() {
     // given
     ClubCreateRequest request = ClubCreateRequest.builder()
                                                  .title("클럽1")
@@ -56,7 +61,7 @@ class ClubControllerTest extends BaseControllerTest {
                                                  .build();
     Account account = accountRepository.findWithAccountRoleByUserId("hwanse").get();
 
-    clubService.createClub(account, request);
+    return clubService.createClub(account, request);
   }
 
   @Test
@@ -93,10 +98,10 @@ class ClubControllerTest extends BaseControllerTest {
   @WithMockJwtAuthentication
   public void getClub() throws Exception {
     // given
-    setupClub();
+    Club club = setupClub();
 
     // when & then
-    mockMvc.perform(get("/api/clubs/1"))
+    mockMvc.perform(get("/api/clubs/{id}", club.getId()))
            .andDo(print())
            .andExpect(status().isOk())
           .andExpect(jsonPath("$.data").exists())
@@ -104,6 +109,23 @@ class ClubControllerTest extends BaseControllerTest {
           .andExpect(jsonPath("$.data.clubInfo").exists())
           .andExpect(jsonPath("$.data.clubAccountStatus").exists())
           .andExpect(jsonPath("$.data.clubAccountsInfo").exists());
+  }
+
+  @Test
+  @DisplayName("클럽 리스트 조회 (페이징)")
+  @WithMockJwtAuthentication
+  public void getClubPage() throws Exception {
+    // given
+    for (int i = 0; i < 30; i++) {
+      setupClub();
+    }
+
+    // when & then
+    mockMvc.perform(get("/api/clubs")
+                    .queryParam("page", "0")
+                    .queryParam("size", "10"))
+           .andDo(print())
+           .andExpect(status().isOk());
   }
 
 }

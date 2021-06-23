@@ -12,6 +12,9 @@ import com.study.clubserver.domain.club.ClubService;
 import com.study.clubserver.security.CurrentAccount;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
@@ -42,8 +45,13 @@ public class ClubController {
 
   @GetMapping("/{clubId}")
   public ApiResult getClubMembersDetails(@CurrentAccount Account account, @PathVariable Long clubId) {
-    return OK(clubService.getClubDetail(clubId, account));
+    return OK(clubService.getClubDetails(clubId, account));
   }
 
+  @GetMapping
+  public ApiResult queryClubPage(@CurrentAccount Account account,
+    @PageableDefault(sort = "createAT", direction = Direction.DESC) Pageable pageable) {
+    return OK(clubService.getClubPage(pageable));
+  }
 
 }
