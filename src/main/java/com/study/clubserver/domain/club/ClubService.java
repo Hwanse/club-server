@@ -99,7 +99,7 @@ public class ClubService {
   public ClubAccount accountJoinToClub(Account account, Long clubId) {
     Club club = clubRepository.findById(clubId).orElseThrow(IllegalArgumentException::new);
     if (isContainsMember(club, account)) {
-      throw new IllegalArgumentException("이미 가입했습니다..");
+      throw new RuntimeException("이미 가입했습니다..");
     }
 
     ClubAccount clubAccount = clubAccountRepository.save(new ClubAccount(club, account));
