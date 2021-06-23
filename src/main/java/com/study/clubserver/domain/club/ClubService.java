@@ -31,7 +31,7 @@ public class ClubService {
   private final ClubRepository clubRepository;
   private final ClubAccountService clubAccountService;
   private final ClubAccountRepository clubAccountRepository;
-  private final ClubAccontRoleRepository clubAccontRoleRepository;
+  private final ClubAccountRoleRepository clubAccountRoleRepository;
   private final RoleRepository roleRepository;
 
   private final InterestRepository interestRepository;
@@ -49,7 +49,7 @@ public class ClubService {
     // 클럽유저 - 클럽내 유저 권한 관계 추가
     roleRepository.findByRoleType(RoleType.MANAGER)
                   .ifPresent(
-                    role -> clubAccontRoleRepository.save(new ClubAccountRole(role, clubAccount))
+                    role -> clubAccountRoleRepository.save(new ClubAccountRole(role, clubAccount))
                   );
     // 클럽 - 주요 관심사 관계 설정
     interestRepository.findInterestsByIdList(request.getInterestList())
@@ -94,6 +94,21 @@ public class ClubService {
     Page<Club> clubPage = clubRepository.findClubsWithPaging(pageable);
     List<ClubDto> clubDtos = clubPage.stream().map(ClubDto::new).collect(Collectors.toList());
     return new PageImpl<>(clubDtos, clubPage.getPageable(), clubPage.getTotalElements());
+  }
+
+  public ClubAccount accountJoinToClub(Account account, Long clubId) {
+    Club club = clubRepository.findById(clubId).orElseThrow(IllegalArgumentException::new);
+    if (isContainsMember(club, account)) {
+      throw new IllegalArgumentException("이미 가입했습니다..");
+    }
+
+    ClubAccount clubAccount = clubAccountRepository.save(new ClubAccount(club, account));
+    roleRepository.findByRoleType(RoleType.MEMBER)
+                  .ifPresent(
+                    role -> clubAccountRoleRepository.save(new ClubAccountRole(role, clubAccount))
+                  );
+
+    return clubAccount;
   }
 
   private boolean isContainsMember(Club club, Account account) {

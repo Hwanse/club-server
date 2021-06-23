@@ -41,8 +41,12 @@ class ClubControllerTest extends BaseControllerTest {
     accountRepository.deleteAll();
   }
 
-  private Club setupClub() {
-    // given
+  private Account createUser(String username) {
+    Account account = new Account(username, username + "@email.com", username, username);
+    return accountService.join(account);
+  }
+
+  private Club setupClub(String userId) {
     ClubCreateRequest request = ClubCreateRequest.builder()
                                                  .title("클럽1")
                                                  .description("설명")
@@ -50,8 +54,8 @@ class ClubControllerTest extends BaseControllerTest {
                                                  .interestList(List.of(1L, 2L))
                                                  .zoneList(List.of(101L, 102L))
                                                  .build();
-    Account account = accountRepository.findWithAccountRoleByUserId("hwanse").get();
 
+    Account account = accountRepository.findWithAccountRoleByUserId(userId).get();
     return clubService.createClub(account, request);
   }
 
@@ -91,7 +95,7 @@ class ClubControllerTest extends BaseControllerTest {
   @WithMockJwtAuthentication
   public void getClub() throws Exception {
     // given
-    Club club = setupClub();
+    Club club = setupClub("hwanse");
 
     // when & then
     mockMvc.perform(get("/api/clubs/{id}", club.getId()))
@@ -110,7 +114,7 @@ class ClubControllerTest extends BaseControllerTest {
   public void getClubPage() throws Exception {
     // given
     for (int i = 0; i < 30; i++) {
-      setupClub();
+      setupClub("hwanse");
     }
     int page = 0;
     int size = 10;
@@ -129,6 +133,24 @@ class ClubControllerTest extends BaseControllerTest {
            .andExpect(jsonPath("$.data.number").value(page))
            .andExpect(jsonPath("$.data.first").exists())
            .andExpect(jsonPath("$.data.last").exists());
+  }
+
+  @Test
+  @DisplayName("클럽 가입 API - success")
+  @WithMockJwtAuthentication
+  public void clubJoin() throws Exception {
+    // given
+    Account account = createUser("test");
+    Club club = setupClub(account.getUserId());
+
+    // when & then
+    mockMvc.perform(post("/api/clubs/{clubId}/join", club.getId()))
+           .andDo(print())
+           .andExpect(status().isOk())
+           .andExpect(jsonPath("$.data").exists())
+           .andExpect(jsonPath("$.data.join").value(true))
+           .andExpect(jsonPath("$.success").value(true));
+
   }
 
 }

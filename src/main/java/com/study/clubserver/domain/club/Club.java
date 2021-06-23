@@ -36,16 +36,16 @@ public class Club extends CommonEntity {
   @Lob
   private String bannerImageUrl;
 
-  @OneToMany(mappedBy = "club", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "club", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<ClubAccount> members = new ArrayList<>();
 
-  @OneToMany(mappedBy = "club", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "club", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Meeting> meetings = new ArrayList<>();
 
-  @OneToMany(mappedBy = "club", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "club", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<ClubInterest> interests = new HashSet<>();
 
-  @OneToMany(mappedBy = "club", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "club", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<ClubZone> zones = new HashSet<>();
 
   @OneToMany(mappedBy = "club", cascade = CascadeType.ALL)

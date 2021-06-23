@@ -1,5 +1,6 @@
 package com.study.clubserver.api.controller.club;
 
+import static com.study.clubserver.api.dto.ApiResult.ERROR;
 import static com.study.clubserver.api.dto.ApiResult.OK;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -7,8 +8,10 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import com.study.clubserver.api.dto.ApiResult;
 import com.study.clubserver.api.dto.club.ClubCreateRequest;
 import com.study.clubserver.api.dto.club.ClubDto;
+import com.study.clubserver.api.dto.club.ClubJoinResponse;
 import com.study.clubserver.domain.account.Account;
 import com.study.clubserver.domain.club.Club;
+import com.study.clubserver.domain.club.ClubAccount;
 import com.study.clubserver.domain.club.ClubService;
 import com.study.clubserver.security.CurrentAccount;
 import javax.validation.Valid;
@@ -18,6 +21,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,7 +42,10 @@ public class ClubController {
   public ResponseEntity createClub(@CurrentAccount Account account,
     @Valid @RequestBody ClubCreateRequest request, Errors errors) {
     if (errors.hasErrors()) {
-      return ResponseEntity.badRequest().build();
+      return ResponseEntity.badRequest()
+                           .body(
+                             ERROR(HttpStatus.BAD_REQUEST, "입력 값 조건에 맞지 않습니다.")
+                           );
     }
 
     Club club = clubService.createClub(account, request);
@@ -62,6 +69,12 @@ public class ClubController {
   public ApiResult queryClubPage(@CurrentAccount Account account,
     @PageableDefault(sort = "createAT", direction = Direction.DESC) Pageable pageable) {
     return OK(clubService.getClubPage(pageable));
+  }
+
+  @PostMapping("/{clubId}/join")
+  public ApiResult clubJoin(@CurrentAccount Account account, @PathVariable Long clubId) {
+    clubService.accountJoinToClub(account, clubId);
+    return OK(new ClubJoinResponse(true));
   }
 
 }
