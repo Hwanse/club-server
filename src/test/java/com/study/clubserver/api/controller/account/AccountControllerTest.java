@@ -10,25 +10,16 @@ import com.study.clubserver.api.controller.BaseControllerTest;
 import com.study.clubserver.api.dto.account.JoinRequest;
 import com.study.clubserver.api.dto.account.LoginRequest;
 import com.study.clubserver.domain.account.Account;
-import com.study.clubserver.domain.account.AccountRepository;
-import com.study.clubserver.domain.account.AccountService;
 import com.study.clubserver.domain.role.RoleType;
 import com.study.clubserver.security.WithMockJwtAuthentication;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
 
 class AccountControllerTest extends BaseControllerTest {
-
-  @Autowired
-  AccountService accountService;
-
-  @Autowired
-  AccountRepository accountRepository;
 
   private String id = "hwanse";
   private String password = "hwanse";

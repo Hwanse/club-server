@@ -2,6 +2,7 @@ package com.study.clubserver.api.controller.club;
 
 import static com.study.clubserver.api.dto.ApiResult.OK;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import com.study.clubserver.api.dto.ApiResult;
 import com.study.clubserver.api.dto.club.ClubCreateRequest;
@@ -36,7 +37,11 @@ public class ClubController {
   public ResponseEntity createClub(@CurrentAccount Account account,
     @Valid @RequestBody ClubCreateRequest request) {
     Club club = clubService.createClub(account, request);
-    WebMvcLinkBuilder selfLinkBuilder = linkTo(ClubController.class);
+
+    WebMvcLinkBuilder selfLinkBuilder = linkTo(
+      methodOn(ClubController.class).getClubMembersDetails(account, club.getId())
+    );
+
     return ResponseEntity.created(selfLinkBuilder.toUri())
                          .body(
                            OK(new ClubDto(club))

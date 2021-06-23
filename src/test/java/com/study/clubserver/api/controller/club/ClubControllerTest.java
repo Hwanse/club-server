@@ -9,8 +9,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.study.clubserver.api.controller.BaseControllerTest;
 import com.study.clubserver.api.dto.club.ClubCreateRequest;
 import com.study.clubserver.domain.account.Account;
-import com.study.clubserver.domain.account.AccountRepository;
-import com.study.clubserver.domain.account.AccountService;
 import com.study.clubserver.domain.club.Club;
 import com.study.clubserver.domain.club.ClubService;
 import com.study.clubserver.security.WithMockJwtAuthentication;
@@ -19,24 +17,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
-import org.springframework.transaction.annotation.Transactional;
 
 class ClubControllerTest extends BaseControllerTest {
-
-  @Autowired
-  AccountService accountService;
-
-  @Autowired
-  AccountRepository accountRepository;
 
   @Autowired
   ClubService clubService;
 
   @BeforeEach
-  @Transactional
   public void setupUser() {
     Account account = new Account("hwanse", "hwanse@email.com",
                                   "hwanse", "hwanse");
@@ -44,7 +33,6 @@ class ClubControllerTest extends BaseControllerTest {
   }
 
   @AfterEach
-  @Transactional
   public void clear() {
     accountRepository.findAll().forEach(
       account -> account.deleteRole()

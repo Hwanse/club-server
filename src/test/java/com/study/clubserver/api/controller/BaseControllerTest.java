@@ -1,6 +1,8 @@
 package com.study.clubserver.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.study.clubserver.domain.account.AccountRepository;
+import com.study.clubserver.domain.account.AccountService;
 import org.junit.jupiter.api.Disabled;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -21,5 +23,12 @@ public class BaseControllerTest {
 
   @Autowired
   protected ObjectMapper objectMapper;
+
+  @Autowired
+  protected AccountService accountService;
+
+  @Autowired
+  protected AccountRepository accountRepository;
+
 
 }
