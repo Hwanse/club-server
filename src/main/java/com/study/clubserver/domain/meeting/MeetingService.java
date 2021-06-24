@@ -37,7 +37,7 @@ public class MeetingService {
     Meeting meeting = meetingRepository.save(new Meeting(club, clubAccount,request));
     // 생성된 모임에 구성원 추가
     meetingEntryRepository.save(new MeetingEntry(meeting, clubAccount));
-
+    // 미팅 인원 증가
     meeting.incrementEntryCount();
 
     return meeting;
@@ -66,6 +66,39 @@ public class MeetingService {
     return new MeetingDetailsDto(new MeetingDto(meeting), participants);
   }
 
+  @Transactional
+  public void participateMeeting(Account account, Long clubId, Long meetingId) {
+    Club club = getClub(clubId);
+    ClubAccount clubAccount = getClubAccount(club, account);
+    Meeting meeting = meetingRepository.findMeetingWithMeetingLeaderById(meetingId);
+
+    checkParticipateMeeting(clubAccount, meeting);
+
+    // 참여 신청
+    meetingEntryRepository.save(new MeetingEntry(meeting, clubAccount));
+    meeting.incrementEntryCount();
+
+  }
+
+  private void checkParticipateMeeting(ClubAccount clubAccount, Meeting meeting) {
+    if (meeting.isEnd()) {
+      throw new RuntimeException("종료된 모임입니다.");
+    }
+
+    if (meeting.getEntryCount() >= meeting.getLimitEntryCount()) {
+      throw new RuntimeException("인원이 찬 모임입니다.");
+    }
+
+    if (isPartipateInMeeting(clubAccount, meeting)) {
+      throw new RuntimeException("이미 참가중인 모임입니다,");
+    }
+  }
+
+  private boolean isPartipateInMeeting(ClubAccount clubAccount, Meeting meeting) {
+    return meeting.getParticipants().stream()
+                  .anyMatch(meetingEntry -> meetingEntry.getParticipant() == clubAccount);
+  }
+
   private Club getClub(Long clubId) {
     return clubRepository.findById(clubId)
                          .orElseThrow(
@@ -73,7 +106,6 @@ public class MeetingService {
                          );
   }
 
-  // 쿼리 튜닝 필요 (Role 조회까지)
   private ClubAccount getClubAccount(Club club, Account account) {
     return clubAccountRepository.findClubAccountWithRole(club, account)
                                 .orElseThrow(() -> new RuntimeException("클럽 구성원이 아닙니다."));

@@ -103,7 +103,7 @@ public class ClubService {
   }
 
   @Transactional
-  public ClubAccount accountJoinToClub(Account account, Long clubId) {
+  public void accountJoinToClub(Account account, Long clubId) {
     Club club = clubRepository.findById(clubId).orElseThrow(IllegalArgumentException::new);
     List<ClubAccount> accountListOfClub = getClubAccountListOfClub(club);
     if (accountListOfClub.size() >= club.getLimitMemberCount()) {
@@ -121,7 +121,6 @@ public class ClubService {
                   );
     club.incrementMemberCount();
 
-    return clubAccount;
   }
 
   private List<ClubAccount> getClubAccountListOfClub(Club club) {

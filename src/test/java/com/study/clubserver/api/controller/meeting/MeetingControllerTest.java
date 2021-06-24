@@ -85,6 +85,11 @@ class MeetingControllerTest extends BaseControllerTest {
     return clubService.createClub(account, request);
   }
 
+  private void clubJoin(String userId, Club club) {
+    Account account = accountRepository.findWithAccountRoleByUserId(userId).get();
+    clubService.accountJoinToClub(account, club.getId());
+  }
+
   @Test
   @DisplayName("모임 생성 API")
   @WithMockJwtAuthentication
@@ -100,7 +105,7 @@ class MeetingControllerTest extends BaseControllerTest {
                     .accept(MediaTypes.HAL_JSON_VALUE))
            .andDo(print())
            .andExpect(status().isCreated())
-           .andExpect(jsonPath("$.data.meetingId").exists())
+           .andExpect(jsonPath("$.data.id").exists())
            .andExpect(jsonPath("$.data.title").exists())
            .andExpect(jsonPath("$.data.description").exists())
            .andExpect(jsonPath("$.data.meetingStartTime").exists())
@@ -167,6 +172,25 @@ class MeetingControllerTest extends BaseControllerTest {
            .andExpect(jsonPath("$.data.participants[0].userId").exists())
            .andExpect(jsonPath("$.data.participants[0].userName").exists())
            .andExpect(jsonPath("$.data.participants[0].role").exists());
+  }
+
+  @Test
+  @DisplayName("모임 참가 API")
+  @WithMockJwtAuthentication
+  public void enter() throws Exception {
+    // given
+    Account account = createUser("test");
+    Club club = setupClub(account.getUserId());
+    Meeting meeting = setupMeeting(club, account.getUserId());
+    clubJoin("hwanse", club);
+
+    // when & then
+    mockMvc.perform(post("/api/clubs/{clubId}/meetings/{meetingId}/participate",
+                         club.getId(), meeting.getId()))
+           .andDo(print())
+           .andExpect(status().isOk())
+           .andExpect(jsonPath("$.data").value(true))
+           .andExpect(jsonPath("$.success").value(true));
   }
 
 }

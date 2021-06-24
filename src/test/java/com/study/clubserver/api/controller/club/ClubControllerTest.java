@@ -147,8 +147,7 @@ class ClubControllerTest extends BaseControllerTest {
     mockMvc.perform(post("/api/clubs/{clubId}/join", club.getId()))
            .andDo(print())
            .andExpect(status().isOk())
-           .andExpect(jsonPath("$.data").exists())
-           .andExpect(jsonPath("$.data.join").value(true))
+           .andExpect(jsonPath("$.data").value(true))
            .andExpect(jsonPath("$.success").value(true));
 
   }

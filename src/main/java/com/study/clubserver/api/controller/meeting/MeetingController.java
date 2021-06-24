@@ -58,4 +58,11 @@ public class MeetingController {
     );
   }
 
+  @PostMapping("/{meetingId}/participate")
+  public ApiResult participateMeeting(@CurrentAccount Account account, @PathVariable Long clubId,
+    @PathVariable Long meetingId) {
+    meetingService.participateMeeting(account, clubId, meetingId);
+    return OK(true);
+  }
+
 }

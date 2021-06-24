@@ -3,12 +3,10 @@ package com.study.clubserver.api.controller.club;
 import static com.study.clubserver.api.dto.ApiResult.ERROR;
 import static com.study.clubserver.api.dto.ApiResult.OK;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import com.study.clubserver.api.dto.ApiResult;
 import com.study.clubserver.api.dto.club.ClubCreateRequest;
 import com.study.clubserver.api.dto.club.ClubDto;
-import com.study.clubserver.api.dto.club.ClubJoinResponse;
 import com.study.clubserver.domain.account.Account;
 import com.study.clubserver.domain.club.Club;
 import com.study.clubserver.domain.club.ClubService;
@@ -70,7 +68,7 @@ public class ClubController {
   @PostMapping("/{clubId}/join")
   public ApiResult clubJoin(@CurrentAccount Account account, @PathVariable Long clubId) {
     clubService.accountJoinToClub(account, clubId);
-    return OK(new ClubJoinResponse(true));
+    return OK(true);
   }
 
 }
