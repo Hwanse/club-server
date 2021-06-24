@@ -1,7 +1,9 @@
-package com.study.clubserver.domain.club;
+package com.study.clubserver.domain.club.clubAccount;
 
 import com.study.clubserver.domain.CommonEntity;
 import com.study.clubserver.domain.account.Account;
+import com.study.clubserver.domain.club.Club;
+import com.study.clubserver.domain.club.clubAccountRole.ClubAccountRole;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;

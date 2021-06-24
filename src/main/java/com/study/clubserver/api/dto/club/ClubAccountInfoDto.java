@@ -1,6 +1,6 @@
 package com.study.clubserver.api.dto.club;
 
-import com.study.clubserver.domain.club.ClubAccount;
+import com.study.clubserver.domain.club.clubAccount.ClubAccount;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

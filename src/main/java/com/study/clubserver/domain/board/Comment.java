@@ -1,15 +1,13 @@
 package com.study.clubserver.domain.board;
 
 import com.study.clubserver.domain.CommonEntity;
-import com.study.clubserver.domain.club.ClubAccount;
+import com.study.clubserver.domain.club.clubAccount.ClubAccount;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.Getter;
-import org.hibernate.mapping.ToOne;
 
 @Entity
 @Table(name = "board_comment")

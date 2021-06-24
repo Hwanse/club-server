@@ -60,7 +60,7 @@ class ClubControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @DisplayName("클럽 생성 API - success")
+  @DisplayName("클럽 생성 API")
   @WithMockJwtAuthentication
   public void createClub() throws Exception {
     // given
@@ -91,7 +91,7 @@ class ClubControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @DisplayName("클럽 정보 조회 API - success")
+  @DisplayName("클럽 정보 조회 API")
   @WithMockJwtAuthentication
   public void getClub() throws Exception {
     // given
@@ -109,7 +109,7 @@ class ClubControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @DisplayName("클럽 리스트 조회 (페이징)")
+  @DisplayName("클럽 리스트 조회 API(페이징)")
   @WithMockJwtAuthentication
   public void getClubPage() throws Exception {
     // given
@@ -136,7 +136,7 @@ class ClubControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @DisplayName("클럽 가입 API - success")
+  @DisplayName("클럽 가입 API")
   @WithMockJwtAuthentication
   public void clubJoin() throws Exception {
     // given

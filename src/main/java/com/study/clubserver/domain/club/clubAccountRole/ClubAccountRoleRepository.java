@@ -1,4 +1,4 @@
-package com.study.clubserver.domain.club;
+package com.study.clubserver.domain.club.clubAccountRole;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -39,7 +39,7 @@ class AccountControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @DisplayName("회원가입 API - success")
+  @DisplayName("회원가입 API")
   public void join() throws Exception {
     // given
     String testId = "test";
@@ -67,7 +67,7 @@ class AccountControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @DisplayName("로그인 API - success")
+  @DisplayName("로그인 API")
   public void login() throws Exception {
     // given
     LoginRequest loginRequest = new LoginRequest(id, password);
@@ -84,7 +84,7 @@ class AccountControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @DisplayName("유저 정보 조회 API - success")
+  @DisplayName("유저 정보 조회 API")
   @WithMockJwtAuthentication
   public void profile() throws Exception {
     mockMvc.perform(get("/profile"))

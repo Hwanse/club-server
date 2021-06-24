@@ -11,7 +11,6 @@ import com.study.clubserver.api.dto.club.ClubDto;
 import com.study.clubserver.api.dto.club.ClubJoinResponse;
 import com.study.clubserver.domain.account.Account;
 import com.study.clubserver.domain.club.Club;
-import com.study.clubserver.domain.club.ClubAccount;
 import com.study.clubserver.domain.club.ClubService;
 import com.study.clubserver.security.CurrentAccount;
 import javax.validation.Valid;

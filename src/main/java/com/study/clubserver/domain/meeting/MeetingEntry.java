@@ -1,7 +1,7 @@
 package com.study.clubserver.domain.meeting;
 
 import com.study.clubserver.domain.CommonEntity;
-import com.study.clubserver.domain.club.ClubAccount;
+import com.study.clubserver.domain.club.clubAccount.ClubAccount;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 

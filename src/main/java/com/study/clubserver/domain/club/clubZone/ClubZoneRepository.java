@@ -1,4 +1,4 @@
-package com.study.clubserver.domain.zone;
+package com.study.clubserver.domain.club.clubZone;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
