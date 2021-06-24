@@ -48,24 +48,23 @@ public class ClubService {
   public Club createClub(Account account, ClubCreateRequest request) {
     Club savedClub = clubRepository.save(new Club(request));
 
-    // 클럽 - 유저 관계 추가
     ClubAccount clubAccount = clubAccountRepository.save(new ClubAccount(savedClub, account));
-    // 클럽유저 - 클럽내 유저 권한 관계 추가
-    roleRepository.findByRoleType(RoleType.MANAGER)
-                  .ifPresent(
-                    role -> clubAccountRoleRepository.save(new ClubAccountRole(role, clubAccount))
-                  );
-    // 클럽 - 주요 관심사 관계 설정
-    interestRepository.findInterestsByIdList(request.getInterestList())
-                      .forEach(
-                        interest -> clubInterestRepository.save(new ClubInterest(savedClub, interest))
-                      );
 
-    // 클럽 - 주요 지역 관계 설정
-    zoneRepository.findZonesByIdList(request.getZoneList())
-                  .forEach(
-                    zone -> clubZoneRepository.save(new ClubZone(savedClub, zone))
-                  );
+    roleRepository
+      .findByRoleType(RoleType.MANAGER)
+      .ifPresent(role -> clubAccountRoleRepository.save(new ClubAccountRole(role, clubAccount)));
+
+    List<ClubInterest> clubInterests = interestRepository
+      .findInterestsByIdList(request.getInterestList()).stream()
+      .map(interest -> new ClubInterest(savedClub, interest))
+      .collect(Collectors.toList());
+    clubInterestRepository.saveAll(clubInterests);
+
+    List<ClubZone> clubZones = zoneRepository
+      .findZonesByIdList(request.getZoneList()).stream()
+      .map(zone -> new ClubZone(savedClub, zone))
+      .collect(Collectors.toList());
+    clubZoneRepository.saveAll(clubZones);
 
     savedClub.incrementMemberCount();
 
@@ -76,6 +75,7 @@ public class ClubService {
   public ClubMembersDetailsDto getClubDetails(Long clubId, Account account) {
     Club club = clubRepository.findById(clubId).orElseThrow(IllegalArgumentException::new);
     List<ClubAccount> accountListOfClub = getClubAccountListOfClub(club);
+
     if (!isJoinedInClub(account, accountListOfClub)) {
       throw new IllegalArgumentException("클럽에 가입되어 있지 않은 회원입니다");
     }
@@ -106,6 +106,7 @@ public class ClubService {
   public void accountJoinToClub(Account account, Long clubId) {
     Club club = clubRepository.findById(clubId).orElseThrow(IllegalArgumentException::new);
     List<ClubAccount> accountListOfClub = getClubAccountListOfClub(club);
+
     if (accountListOfClub.size() >= club.getLimitMemberCount()) {
       throw new RuntimeException("인원이 찬 클럽입니다.");
     }
@@ -115,10 +116,10 @@ public class ClubService {
     }
 
     ClubAccount clubAccount = clubAccountRepository.save(new ClubAccount(club, account));
-    roleRepository.findByRoleType(RoleType.MEMBER)
-                  .ifPresent(
-                    role -> clubAccountRoleRepository.save(new ClubAccountRole(role, clubAccount))
-                  );
+    roleRepository
+      .findByRoleType(RoleType.MEMBER)
+      .ifPresent(role -> clubAccountRoleRepository.save(new ClubAccountRole(role, clubAccount)));
+
     club.incrementMemberCount();
 
   }

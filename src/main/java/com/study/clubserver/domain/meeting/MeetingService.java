@@ -46,10 +46,10 @@ public class MeetingService {
   @Transactional(readOnly = true)
   public Page<MeetingDto> getMeetingsPage(Long clubId, Pageable pageable) {
     Club club = getClub(clubId);
-
     // 해당 클럽의 모임 리스트를 조회
     Page<Meeting> meetingPage = meetingRepository.findMeetingsOfClubWithPaging(club, pageable);
     List<MeetingDto> meetingDtoList = meetingPage.stream().map(MeetingDto::new).collect(Collectors.toList());
+
     return new PageImpl<>(meetingDtoList, meetingPage.getPageable(), meetingPage.getTotalElements());
   }
 
