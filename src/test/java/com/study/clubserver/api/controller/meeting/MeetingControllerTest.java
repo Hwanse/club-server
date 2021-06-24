@@ -1,6 +1,7 @@
 package com.study.clubserver.api.controller.meeting;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -12,6 +13,8 @@ import com.study.clubserver.api.dto.meeting.MeetingCreateRequest;
 import com.study.clubserver.domain.account.Account;
 import com.study.clubserver.domain.club.Club;
 import com.study.clubserver.domain.club.ClubService;
+import com.study.clubserver.domain.meeting.Meeting;
+import com.study.clubserver.domain.meeting.MeetingService;
 import com.study.clubserver.security.WithMockJwtAuthentication;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,12 +31,14 @@ class MeetingControllerTest extends BaseControllerTest {
   @Autowired
   ClubService clubService;
 
+  @Autowired
+  MeetingService meetingService;
+
   @BeforeEach
   public void setupUser() {
     Account account = new Account("hwanse", "hwanse@email.com",
                                   "hwanse", "hwanse");
     accountService.join(account);
-
   }
 
   @AfterEach
@@ -47,6 +52,11 @@ class MeetingControllerTest extends BaseControllerTest {
   private Account createUser(String username) {
     Account account = new Account(username, username + "@email.com", username, username);
     return accountService.join(account);
+  }
+
+  private Meeting setupMeeting(Club club, String userId) {
+    Account account = accountRepository.findWithAccountRoleByUserId(userId).get();
+    return meetingService.createMeeting(account, club.getId(), createRequest());
   }
 
   private MeetingCreateRequest createRequest() {
@@ -100,6 +110,34 @@ class MeetingControllerTest extends BaseControllerTest {
            .andExpect(jsonPath("$.data.meetingAddress").exists())
            .andExpect(jsonPath("$.data.clubId").exists())
     ;
+  }
+
+  @Test
+  @DisplayName("모임 리스트 조회 API (페이징)")
+  @WithMockJwtAuthentication
+  public void queryMeetingPage() throws Exception {
+    // given
+    Club club = setupClub("hwanse");
+    for (int i = 0; i < 30; i++) {
+      setupMeeting(club, "hwanse");
+    }
+
+    int page = 0;
+    int size = 10;
+
+    mockMvc.perform(get("/api/clubs/{clubId}/meetings", club.getId())
+                    .param("page", String.valueOf(page))
+                    .param("size", String.valueOf(size)))
+           .andDo(print())
+           .andExpect(status().isOk())
+           .andExpect(jsonPath("$.data.content").exists())
+           .andExpect(jsonPath("$.data.totalPages").exists())
+           .andExpect(jsonPath("$.data.totalElements").exists())
+           .andExpect(jsonPath("$.data.size").value(size))
+           .andExpect(jsonPath("$.data.numberOfElements").value(size))
+           .andExpect(jsonPath("$.data.number").value(page))
+           .andExpect(jsonPath("$.data.first").exists())
+           .andExpect(jsonPath("$.data.last").exists());
   }
 
 }

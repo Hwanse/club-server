@@ -2,7 +2,6 @@ package com.study.clubserver.api.controller.meeting;
 
 import static com.study.clubserver.api.dto.ApiResult.OK;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import com.study.clubserver.api.dto.ApiResult;
 import com.study.clubserver.api.dto.meeting.MeetingCreateRequest;
@@ -13,9 +12,11 @@ import com.study.clubserver.domain.meeting.MeetingService;
 import com.study.clubserver.security.CurrentAccount;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,6 +40,14 @@ public class MeetingController {
                          .body(
                            OK(new MeetingDto(meeting))
                          );
+  }
+
+  @GetMapping
+  public ApiResult queryMeetingPage(@CurrentAccount Account account, @PathVariable Long clubId,
+    Pageable pageable) {
+    return OK(
+      meetingService.getMeetingsPage(clubId, pageable)
+    );
   }
 
 }

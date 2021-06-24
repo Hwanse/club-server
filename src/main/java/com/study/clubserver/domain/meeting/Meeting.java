@@ -38,6 +38,8 @@ public class Meeting extends CommonEntity {
 
   private String meetingAddress;
 
+  private boolean isEnd;
+
   @ManyToOne
   @JoinColumn(name = "club_id")
   private Club club;
@@ -54,6 +56,7 @@ public class Meeting extends CommonEntity {
     this.limitEntryCount = request.getLimitEntryCount();
     this.meetingAddress = request.getMeetingAddress();
     this.club = club;
+    this.isEnd = false;
   }
 
   public void incrementEntryCount() {
