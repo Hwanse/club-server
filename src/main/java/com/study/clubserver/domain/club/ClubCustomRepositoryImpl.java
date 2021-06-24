@@ -12,11 +12,11 @@ import org.springframework.data.domain.Pageable;
 @RequiredArgsConstructor
 public class ClubCustomRepositoryImpl implements ClubCustomRepository {
 
-  private final JPAQueryFactory queryFactory;
+  private final JPAQueryFactory factory;
 
   @Override
   public Page<Club> findClubsWithPaging(Pageable pageable) {
-    QueryResults<Club> queryResults = queryFactory
+    QueryResults<Club> queryResults = factory
       .select(club)
       .from(club)
       .offset(pageable.getOffset())

@@ -8,8 +8,6 @@ import static com.study.clubserver.domain.role.QRole.role;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.study.clubserver.domain.account.Account;
-import com.study.clubserver.domain.account.QAccount;
-import com.study.clubserver.domain.role.QRole;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -17,12 +15,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ClubAccountCustomRepositoryImpl implements ClubAccountCustomRepository {
 
-  private final JPAQueryFactory queryFactory;
+  private final JPAQueryFactory factory;
 
   @Override
   public Optional<ClubAccount> findClubAccountWithRole(Club paramClub, Account paramAccount) {
     return Optional.ofNullable(
-      queryFactory
+      factory
         .select(clubAccount)
         .from(clubAccount)
         .join(clubAccount.club, club).fetchJoin()
@@ -39,7 +37,7 @@ public class ClubAccountCustomRepositoryImpl implements ClubAccountCustomReposit
 
   @Override
   public List<ClubAccount> findClubAccountsOfClub(Club paramClub) {
-    return queryFactory
+    return factory
       .select(clubAccount)
       .from(clubAccount)
       .join(clubAccount.account, account).fetchJoin()

@@ -70,8 +70,9 @@ public class ClubService {
 
   public ClubMembersDetailsDto getClubDetails(Long clubId, Account account) {
     Club club = clubRepository.findById(clubId).orElseThrow(IllegalArgumentException::new);
-    if (! isContainsMember(club, account)) {
-      throw new IllegalArgumentException();
+    List<ClubAccount> accountListOfClub = getClubAccountListOfClub(club);
+    if (!isJoinedInClub(account, accountListOfClub)) {
+      throw new IllegalArgumentException("클럽에 가입되어 있지 않은 회원입니다");
     }
 
     // 현재 인증 유저의 상세 정보
@@ -79,8 +80,7 @@ public class ClubService {
       .getClubAccountDetailWithRole(club, account);
 
     // 클럽의 구성원 리스트
-    List<ClubAccountInfoDto> clubAccountsOfClub = clubAccountRepository
-      .findClubAccountsOfClub(club)
+    List<ClubAccountInfoDto> clubAccountsOfClub = accountListOfClub
       .stream()
       .map(ClubAccountInfoDto::new)
       .collect(Collectors.toList());
@@ -92,14 +92,20 @@ public class ClubService {
 
   public Page<ClubDto> getClubPage(Pageable pageable) {
     Page<Club> clubPage = clubRepository.findClubsWithPaging(pageable);
-    List<ClubDto> clubDtos = clubPage.stream().map(ClubDto::new).collect(Collectors.toList());
-    return new PageImpl<>(clubDtos, clubPage.getPageable(), clubPage.getTotalElements());
+    List<ClubDto> clubDtoList = clubPage.stream().map(ClubDto::new).collect(Collectors.toList());
+    return new PageImpl<>(clubDtoList, clubPage.getPageable(), clubPage.getTotalElements());
   }
 
+  @Transactional
   public ClubAccount accountJoinToClub(Account account, Long clubId) {
     Club club = clubRepository.findById(clubId).orElseThrow(IllegalArgumentException::new);
-    if (isContainsMember(club, account)) {
-      throw new RuntimeException("이미 가입했습니다..");
+    List<ClubAccount> accountListOfClub = getClubAccountListOfClub(club);
+    if (accountListOfClub.size() >= club.getLimitMemberCount()) {
+      throw new RuntimeException("인원이 찬 클럽입니다.");
+    }
+
+    if (isJoinedInClub(account, accountListOfClub)) {
+      throw new RuntimeException("이미 가입했습니다.");
     }
 
     ClubAccount clubAccount = clubAccountRepository.save(new ClubAccount(club, account));
@@ -107,12 +113,17 @@ public class ClubService {
                   .ifPresent(
                     role -> clubAccountRoleRepository.save(new ClubAccountRole(role, clubAccount))
                   );
+    club.incrementMemberCount();
 
     return clubAccount;
   }
 
-  private boolean isContainsMember(Club club, Account account) {
-    return clubAccountRepository.existsClubAccountByClubAndAccount(club, account);
+  private List<ClubAccount> getClubAccountListOfClub(Club club) {
+    return clubAccountRepository.findClubAccountsOfClub(club);
+  }
+
+  private boolean isJoinedInClub(Account account, List<ClubAccount> accountListOfClub) {
+    return accountListOfClub.stream().anyMatch(clubAccount -> clubAccount.getAccount() == account);
   }
 
 }
