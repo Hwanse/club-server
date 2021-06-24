@@ -1,5 +1,6 @@
 package com.study.clubserver.domain.meeting;
 
+import com.study.clubserver.api.dto.meeting.MeetingCreateRequest;
 import com.study.clubserver.domain.CommonEntity;
 import com.study.clubserver.domain.club.Club;
 import com.study.clubserver.domain.zone.Zone;
@@ -14,9 +15,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class Meeting extends CommonEntity {
 
   @Column(nullable = false)
@@ -33,15 +36,28 @@ public class Meeting extends CommonEntity {
 
   private int limitEntryCount;
 
+  private String meetingAddress;
+
   @ManyToOne
   @JoinColumn(name = "club_id")
   private Club club;
 
-  @OneToOne
-  @JoinColumn(name = "zone_id")
-  private Zone zone;
-
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "participant")
   private List<MeetingEntry> participants = new ArrayList<>();
+
+  public Meeting(Club club, MeetingCreateRequest request) {
+    this.title = request.getTitle();
+    this.description = request.getDescription();
+    this.meetingStartTime = request.getMeetingStartTime();
+    this.meetingEndTime = request.getMeetingEndTime();
+    this.entryCount = 0;
+    this.limitEntryCount = request.getLimitEntryCount();
+    this.meetingAddress = request.getMeetingAddress();
+    this.club = club;
+  }
+
+  public void incrementEntryCount() {
+    this.entryCount++;
+  }
 
 }

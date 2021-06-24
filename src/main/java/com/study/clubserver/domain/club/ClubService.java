@@ -29,7 +29,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ClubService {
 
@@ -73,6 +72,7 @@ public class ClubService {
     return savedClub;
   }
 
+  @Transactional(readOnly = true)
   public ClubMembersDetailsDto getClubDetails(Long clubId, Account account) {
     Club club = clubRepository.findById(clubId).orElseThrow(IllegalArgumentException::new);
     List<ClubAccount> accountListOfClub = getClubAccountListOfClub(club);
@@ -95,6 +95,7 @@ public class ClubService {
                                      clubAccountsOfClub);
   }
 
+  @Transactional(readOnly = true)
   public Page<ClubDto> getClubPage(Pageable pageable) {
     Page<Club> clubPage = clubRepository.findClubsWithPaging(pageable);
     List<ClubDto> clubDtoList = clubPage.stream().map(ClubDto::new).collect(Collectors.toList());

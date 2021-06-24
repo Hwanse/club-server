@@ -49,10 +49,7 @@ public class ClubController {
 
     Club club = clubService.createClub(account, request);
 
-    WebMvcLinkBuilder selfLinkBuilder = linkTo(
-      methodOn(ClubController.class).getClubMembersDetails(account, club.getId())
-    );
-
+    WebMvcLinkBuilder selfLinkBuilder = linkTo(ClubController.class).slash(club.getId());
     return ResponseEntity.created(selfLinkBuilder.toUri())
                          .body(
                            OK(new ClubDto(club))

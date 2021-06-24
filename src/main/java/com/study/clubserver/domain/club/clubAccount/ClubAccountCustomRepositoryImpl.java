@@ -2,8 +2,8 @@ package com.study.clubserver.domain.club.clubAccount;
 
 import static com.study.clubserver.domain.account.QAccount.account;
 import static com.study.clubserver.domain.club.QClub.club;
-import static com.study.clubserver.domain.club.QClubAccount.clubAccount;
-import static com.study.clubserver.domain.club.QClubAccountRole.clubAccountRole;
+import static com.study.clubserver.domain.club.clubAccount.QClubAccount.clubAccount;
+import static com.study.clubserver.domain.club.clubAccountRole.QClubAccountRole.clubAccountRole;
 import static com.study.clubserver.domain.role.QRole.role;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -47,5 +47,6 @@ public class ClubAccountCustomRepositoryImpl implements ClubAccountCustomReposit
       .where(clubAccount.club.eq(paramClub))
       .fetch();
   }
+
 
 }
