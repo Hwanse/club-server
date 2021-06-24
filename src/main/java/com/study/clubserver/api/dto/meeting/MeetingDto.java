@@ -1,7 +1,7 @@
 package com.study.clubserver.api.dto.meeting;
 
+import com.study.clubserver.api.dto.club.ClubAccountInfoDto;
 import com.study.clubserver.domain.meeting.Meeting;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class MeetingDto {
 
-  private Long meetingId;
+  private Long id;
 
   private String title;
 
@@ -31,8 +31,10 @@ public class MeetingDto {
 
   private Long clubId;
 
+  private ClubAccountInfoDto meetingLeader;
+
   public MeetingDto(Meeting meeting) {
-    this.meetingId = meeting.getId();
+    this.id = meeting.getId();
     this.title = meeting.getTitle();
     this.description = meeting.getDescription();
     this.meetingStartTime = meeting.getMeetingStartTime()
@@ -43,6 +45,7 @@ public class MeetingDto {
     this.limitEntryCount = meeting.getLimitEntryCount();
     this.meetingAddress = meeting.getMeetingAddress();
     this.clubId = meeting.getClub().getId();
+    this.meetingLeader = new ClubAccountInfoDto(meeting.getMeetingLeader());
   }
 
 }

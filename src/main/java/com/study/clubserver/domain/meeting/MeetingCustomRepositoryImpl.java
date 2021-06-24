@@ -1,12 +1,14 @@
 package com.study.clubserver.domain.meeting;
 
 import static com.study.clubserver.domain.club.QClub.club;
+import static com.study.clubserver.domain.club.clubAccount.QClubAccount.clubAccount;
 import static com.study.clubserver.domain.meeting.QMeeting.meeting;
 
 import com.querydsl.core.QueryResults;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.study.clubserver.domain.club.Club;
 import com.study.clubserver.domain.club.QClub;
+import com.study.clubserver.domain.club.clubAccount.QClubAccount;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -23,6 +25,7 @@ public class MeetingCustomRepositoryImpl implements MeetingCustomRepository {
       .select(meeting)
       .from(meeting)
       .join(meeting.club, club).fetchJoin()
+      .join(meeting.meetingLeader, clubAccount).fetchJoin()
       .where(meeting.club.eq(paramClub))
       .offset(pageable.getOffset())
       .limit(pageable.getPageSize())

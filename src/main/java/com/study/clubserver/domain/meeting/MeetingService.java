@@ -1,7 +1,9 @@
 package com.study.clubserver.domain.meeting;
 
 import com.study.clubserver.api.dto.meeting.MeetingCreateRequest;
+import com.study.clubserver.api.dto.meeting.MeetingDetailsDto;
 import com.study.clubserver.api.dto.meeting.MeetingDto;
+import com.study.clubserver.api.dto.meeting.MeetingEntryDto;
 import com.study.clubserver.domain.account.Account;
 import com.study.clubserver.domain.club.Club;
 import com.study.clubserver.domain.club.ClubRepository;
@@ -32,7 +34,7 @@ public class MeetingService {
     // 클럽 구성원인 현재 유저 조회
     ClubAccount clubAccount = getClubAccount(club, account);
     // 모임 생성
-    Meeting meeting = meetingRepository.save(new Meeting(club, request));
+    Meeting meeting = meetingRepository.save(new Meeting(club, clubAccount,request));
     // 생성된 모임에 구성원 추가
     meetingEntryRepository.save(new MeetingEntry(meeting, clubAccount));
 
@@ -47,10 +49,21 @@ public class MeetingService {
 
     // 해당 클럽의 모임 리스트를 조회
     Page<Meeting> meetingPage = meetingRepository.findMeetingsOfClubWithPaging(club, pageable);
-    List<MeetingDto> meetingDtoList = meetingPage.stream()
-                                                 .map(meeting -> new MeetingDto(meeting))
-                                                 .collect(Collectors.toList());
+    List<MeetingDto> meetingDtoList = meetingPage.stream().map(MeetingDto::new).collect(Collectors.toList());
     return new PageImpl<>(meetingDtoList, meetingPage.getPageable(), meetingPage.getTotalElements());
+  }
+
+  @Transactional(readOnly = true)
+  public MeetingDetailsDto getMeetingDetails(Long clubId, Long meetingId, Account account) {
+    Club club = getClub(clubId);
+    getClubAccount(club, account);
+
+    Meeting meeting = meetingRepository.findMeetingWithMeetingLeaderById(meetingId);
+    List<MeetingEntryDto> participants = meetingEntryRepository
+      .findEntryInMeetingByMeeting(meeting).stream()
+      .map(MeetingEntryDto::new).collect(Collectors.toList());
+
+    return new MeetingDetailsDto(new MeetingDto(meeting), participants);
   }
 
   private Club getClub(Long clubId) {
@@ -60,8 +73,9 @@ public class MeetingService {
                          );
   }
 
+  // 쿼리 튜닝 필요 (Role 조회까지)
   private ClubAccount getClubAccount(Club club, Account account) {
-    return clubAccountRepository.findClubAccountByClubAndAccount(club, account)
+    return clubAccountRepository.findClubAccountWithRole(club, account)
                                 .orElseThrow(() -> new RuntimeException("클럽 구성원이 아닙니다."));
   }
 

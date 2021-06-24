@@ -140,4 +140,33 @@ class MeetingControllerTest extends BaseControllerTest {
            .andExpect(jsonPath("$.data.last").exists());
   }
 
+  @Test
+  @DisplayName("모임 조회 API")
+  @WithMockJwtAuthentication
+  public void getMeetingDetails() throws Exception {
+    // given
+    Club club = setupClub("hwanse");
+    Meeting meeting = setupMeeting(club, "hwanse");
+
+    // when & then
+    mockMvc.perform(get("/api/clubs/{clubId}/meetings/{meetingId}", club.getId(), meeting.getId()))
+           .andDo(print())
+           .andExpect(status().isOk())
+           .andExpect(jsonPath("$.data.meeting.id").exists())
+           .andExpect(jsonPath("$.data.meeting.title").exists())
+           .andExpect(jsonPath("$.data.meeting.description").exists())
+           .andExpect(jsonPath("$.data.meeting.meetingStartTime").exists())
+           .andExpect(jsonPath("$.data.meeting.meetingEndTime").exists())
+           .andExpect(jsonPath("$.data.meeting.entryCount").exists())
+           .andExpect(jsonPath("$.data.meeting.limitEntryCount").exists())
+           .andExpect(jsonPath("$.data.meeting.meetingAddress").exists())
+           .andExpect(jsonPath("$.data.meeting.meetingLeader").exists())
+           .andExpect(jsonPath("$.data.meeting.clubId").exists())
+           .andExpect(jsonPath("$.data.participants[0].meetingEntryId").exists())
+           .andExpect(jsonPath("$.data.participants[0].accountId").exists())
+           .andExpect(jsonPath("$.data.participants[0].userId").exists())
+           .andExpect(jsonPath("$.data.participants[0].userName").exists())
+           .andExpect(jsonPath("$.data.participants[0].role").exists());
+  }
+
 }

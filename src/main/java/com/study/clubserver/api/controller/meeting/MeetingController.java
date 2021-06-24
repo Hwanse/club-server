@@ -50,4 +50,12 @@ public class MeetingController {
     );
   }
 
+  @GetMapping("/{meetingId}")
+  public ApiResult getMeetingDetails(@CurrentAccount Account account, @PathVariable Long clubId,
+    @PathVariable Long meetingId) {
+    return OK(
+      meetingService.getMeetingDetails(clubId, meetingId, account)
+    );
+  }
+
 }
