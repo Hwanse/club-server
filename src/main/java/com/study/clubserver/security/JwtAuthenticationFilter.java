@@ -7,6 +7,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,16 +15,13 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @Slf4j
+@RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
   public static final String AUTHORIZATION_HEADER = "Authorization";
   public static final String BEARER = "Bearer";
 
   private final Jwt jwt;
-
-  public JwtAuthenticationFilter(Jwt jwt) {
-    this.jwt = jwt;
-  }
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
