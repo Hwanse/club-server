@@ -10,10 +10,12 @@ import com.study.clubserver.domain.account.Account;
 import com.study.clubserver.domain.board.BoardService;
 import com.study.clubserver.security.CurrentAccount;
 import javax.validation.Valid;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,6 +38,14 @@ public class BoardController {
                          .body(
                            OK(new BoardDto(boardService.createBoard(clubId, account, request)))
                          );
+  }
+
+  @GetMapping("/{boardId}")
+  public ApiResult getBoard(@CurrentAccount Account account, @PathVariable Long clubId,
+    @PathVariable Long boardId) {
+    return OK(
+      new BoardDto(boardService.getBoard(clubId, boardId))
+    );
   }
 
 }

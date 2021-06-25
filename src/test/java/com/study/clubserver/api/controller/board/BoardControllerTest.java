@@ -1,5 +1,6 @@
 package com.study.clubserver.api.controller.board;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -9,6 +10,8 @@ import com.study.clubserver.api.controller.BaseControllerTest;
 import com.study.clubserver.api.dto.board.BoardCreateRequest;
 import com.study.clubserver.api.dto.club.ClubCreateRequest;
 import com.study.clubserver.domain.account.Account;
+import com.study.clubserver.domain.board.Board;
+import com.study.clubserver.domain.board.BoardService;
 import com.study.clubserver.domain.club.Club;
 import com.study.clubserver.domain.club.ClubService;
 import com.study.clubserver.security.WithMockJwtAuthentication;
@@ -25,6 +28,9 @@ class BoardControllerTest extends BaseControllerTest {
 
   @Autowired
   ClubService clubService;
+
+  @Autowired
+  BoardService boardService;
 
   @BeforeEach
   public void setupUser() {
@@ -68,6 +74,12 @@ class BoardControllerTest extends BaseControllerTest {
       .build();
   }
 
+  private Board createBoard(Long clubId, String userId, BoardCreateRequest request) {
+    Account account = accountRepository.findWithAccountRoleByUserId(userId).get();
+    return boardService.createBoard(clubId, account, request);
+  }
+
+
   @Test
   @DisplayName("게시글 생성 API")
   @WithMockJwtAuthentication
@@ -86,6 +98,27 @@ class BoardControllerTest extends BaseControllerTest {
            .andExpect(jsonPath("$.data.id").exists())
            .andExpect(jsonPath("$.data.title").exists())
            .andExpect(jsonPath("$.data.content").exists())
+           .andExpect(jsonPath("$.data.writer").exists())
+           .andExpect(jsonPath("$.data.clubId").exists());
+  }
+
+  @Test
+  @DisplayName("게시글 조회 API")
+  @WithMockJwtAuthentication
+  public void getBoard() throws Exception {
+    // given
+    String userId = "hwanse";
+    Club club = setupClub(userId);
+    Board board = createBoard(club.getId(), userId, createRequest());
+
+    // when & then
+    mockMvc.perform(get("/api/clubs/{clubId}/boards/{boardId}", club.getId(), board.getId()))
+           .andDo(print())
+           .andExpect(status().isOk())
+           .andExpect(jsonPath("$.data.id").exists())
+           .andExpect(jsonPath("$.data.title").exists())
+           .andExpect(jsonPath("$.data.content").exists())
+           .andExpect(jsonPath("$.data.writer").exists())
            .andExpect(jsonPath("$.data.clubId").exists());
   }
 

@@ -20,11 +20,18 @@ public class BoardService {
 
   @Transactional
   public Board createBoard(Long clubId, Account account, BoardCreateRequest request) {
-    Club club = clubRepository.findById(clubId).orElseThrow(IllegalArgumentException::new);
+    Club club = getClub(clubId);
     ClubAccount clubAccount = getClubAccount(club, account);
 
     Board board = boardRepository.save(new Board(club, clubAccount, request));
     return board;
+  }
+
+  @Transactional(readOnly = true)
+  public Board getBoard(Long clubId, Long boardId) {
+    getClub(clubId);
+    return boardRepository.findBoardWithWriterAndClubById(boardId)
+                          .orElseThrow(() -> new IllegalArgumentException("게시글 정보를 조회할 수 없습니다."));
   }
 
   private Club getClub(Long clubId) {
