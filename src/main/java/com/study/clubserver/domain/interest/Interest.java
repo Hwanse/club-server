@@ -2,6 +2,7 @@ package com.study.clubserver.domain.interest;
 
 import com.study.clubserver.api.dto.interest.InterestDto;
 import com.study.clubserver.domain.CommonEntity;
+import com.study.clubserver.domain.interest.interestCollection.InterestCollection;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;

@@ -1,6 +1,8 @@
 package com.study.clubserver.domain.interest;
 
 import com.study.clubserver.api.dto.interest.InterestDto;
+import com.study.clubserver.domain.interest.interestCollection.InterestCollection;
+import com.study.clubserver.domain.interest.interestCollection.InterestCollectionRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

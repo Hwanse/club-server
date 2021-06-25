@@ -1,7 +1,8 @@
-package com.study.clubserver.domain.interest;
+package com.study.clubserver.domain.interest.interestCollection;
 
 import com.study.clubserver.api.dto.interest.InterestCollectionDto;
 import com.study.clubserver.domain.CommonEntity;
+import com.study.clubserver.domain.interest.Interest;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;

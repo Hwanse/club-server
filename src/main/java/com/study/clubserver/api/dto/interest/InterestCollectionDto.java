@@ -1,6 +1,6 @@
 package com.study.clubserver.api.dto.interest;
 
-import com.study.clubserver.domain.interest.InterestCollection;
+import com.study.clubserver.domain.interest.interestCollection.InterestCollection;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
