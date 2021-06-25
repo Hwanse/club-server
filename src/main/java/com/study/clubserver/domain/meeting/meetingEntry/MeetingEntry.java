@@ -1,7 +1,8 @@
-package com.study.clubserver.domain.meeting;
+package com.study.clubserver.domain.meeting.meetingEntry;
 
 import com.study.clubserver.domain.CommonEntity;
 import com.study.clubserver.domain.club.clubAccount.ClubAccount;
+import com.study.clubserver.domain.meeting.Meeting;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import lombok.AllArgsConstructor;

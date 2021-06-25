@@ -1,6 +1,6 @@
 package com.study.clubserver.api.dto.meeting;
 
-import com.study.clubserver.domain.meeting.MeetingEntry;
+import com.study.clubserver.domain.meeting.meetingEntry.MeetingEntry;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

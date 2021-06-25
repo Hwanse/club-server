@@ -4,7 +4,7 @@ import com.study.clubserver.api.dto.meeting.MeetingCreateRequest;
 import com.study.clubserver.domain.CommonEntity;
 import com.study.clubserver.domain.club.Club;
 import com.study.clubserver.domain.club.clubAccount.ClubAccount;
-import com.study.clubserver.domain.zone.Zone;
+import com.study.clubserver.domain.meeting.meetingEntry.MeetingEntry;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +14,6 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

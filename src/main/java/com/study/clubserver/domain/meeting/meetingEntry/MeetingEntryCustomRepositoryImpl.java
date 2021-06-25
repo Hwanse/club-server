@@ -1,4 +1,4 @@
-package com.study.clubserver.domain.meeting;
+package com.study.clubserver.domain.meeting.meetingEntry;
 
 import static com.study.clubserver.domain.club.clubAccount.QClubAccount.clubAccount;
 import static com.study.clubserver.domain.club.clubAccountRole.QClubAccountRole.clubAccountRole;
@@ -7,6 +7,7 @@ import static com.study.clubserver.domain.meeting.QMeetingEntry.meetingEntry;
 import static com.study.clubserver.domain.role.QRole.role;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.study.clubserver.domain.meeting.Meeting;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 

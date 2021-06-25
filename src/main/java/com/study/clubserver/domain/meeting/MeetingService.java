@@ -9,6 +9,8 @@ import com.study.clubserver.domain.club.Club;
 import com.study.clubserver.domain.club.ClubRepository;
 import com.study.clubserver.domain.club.clubAccount.ClubAccount;
 import com.study.clubserver.domain.club.clubAccount.ClubAccountRepository;
+import com.study.clubserver.domain.meeting.meetingEntry.MeetingEntry;
+import com.study.clubserver.domain.meeting.meetingEntry.MeetingEntryRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
