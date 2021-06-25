@@ -122,4 +122,27 @@ class BoardControllerTest extends BaseControllerTest {
            .andExpect(jsonPath("$.data.clubId").exists());
   }
 
+  @Test
+  @DisplayName("게시글 리스트 조회 (페이징)")
+  @WithMockJwtAuthentication
+  public void queryBoardPage() throws Exception {
+    // given
+    String userId = "hwanse";
+    Club club = setupClub(userId);
+
+    for (int i = 0; i < 30; i++) {
+      createBoard(club.getId(), userId, createRequest());
+    }
+
+    int size = 10;
+    int page = 0;
+
+    // when & then
+    mockMvc.perform(get("/api/clubs/{clubId}/boards", club.getId())
+                    .queryParam("size", String.valueOf(size))
+                    .queryParam("page", String.valueOf(page)))
+           .andDo(print())
+           .andExpect(status().isOk());
+  }
+
 }

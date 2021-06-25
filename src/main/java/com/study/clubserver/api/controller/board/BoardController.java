@@ -12,6 +12,9 @@ import com.study.clubserver.security.CurrentAccount;
 import javax.validation.Valid;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
@@ -45,6 +48,14 @@ public class BoardController {
     @PathVariable Long boardId) {
     return OK(
       new BoardDto(boardService.getBoard(clubId, boardId))
+    );
+  }
+
+  @GetMapping
+  public ApiResult queryBoardPage(@CurrentAccount Account account, @PathVariable Long clubId,
+    @PageableDefault(sort = "createdAt", direction = Direction.DESC) Pageable pageable) {
+    return OK(
+      boardService.queryBoardPage(clubId, pageable)
     );
   }
 

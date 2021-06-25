@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.EntityGraph.EntityGraphType;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface BoardRepository extends JpaRepository<Board, Long> {
+public interface BoardRepository extends JpaRepository<Board, Long>, BoardCustomRepository {
 
   @EntityGraph(attributePaths = {"writer", "club"}, type = EntityGraphType.FETCH)
   Optional<Board> findBoardWithWriterAndClubById(Long boardId);

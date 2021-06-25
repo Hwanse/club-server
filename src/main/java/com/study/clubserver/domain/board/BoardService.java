@@ -1,12 +1,18 @@
 package com.study.clubserver.domain.board;
 
 import com.study.clubserver.api.dto.board.BoardCreateRequest;
+import com.study.clubserver.api.dto.board.BoardDto;
 import com.study.clubserver.domain.account.Account;
 import com.study.clubserver.domain.club.Club;
 import com.study.clubserver.domain.club.ClubRepository;
 import com.study.clubserver.domain.club.clubAccount.ClubAccount;
 import com.study.clubserver.domain.club.clubAccount.ClubAccountRepository;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +38,17 @@ public class BoardService {
     getClub(clubId);
     return boardRepository.findBoardWithWriterAndClubById(boardId)
                           .orElseThrow(() -> new IllegalArgumentException("게시글 정보를 조회할 수 없습니다."));
+  }
+
+  @Transactional(readOnly = true)
+  public Page<BoardDto> queryBoardPage(Long clubId, Pageable pageable) {
+    Club club = getClub(clubId);
+
+    Page<Board> boardPage = boardRepository.findBoardsWithWriter(club, pageable);
+    List<BoardDto> boardDtos = boardPage.stream().map(BoardDto::new)
+                                        .collect(Collectors.toList());
+
+    return new PageImpl<>(boardDtos, boardPage.getPageable(), boardPage.getTotalElements());
   }
 
   private Club getClub(Long clubId) {
