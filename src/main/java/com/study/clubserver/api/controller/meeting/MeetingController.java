@@ -13,6 +13,8 @@ import com.study.clubserver.security.CurrentAccount;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +46,7 @@ public class MeetingController {
 
   @GetMapping
   public ApiResult queryMeetingPage(@CurrentAccount Account account, @PathVariable Long clubId,
-    Pageable pageable) {
+    @PageableDefault(sort = "createdAt", direction = Direction.DESC) Pageable pageable) {
     return OK(
       meetingService.getMeetingsPage(clubId, pageable)
     );

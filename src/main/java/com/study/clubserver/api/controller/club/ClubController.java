@@ -61,7 +61,7 @@ public class ClubController {
 
   @GetMapping
   public ApiResult queryClubPage(@CurrentAccount Account account,
-    @PageableDefault(sort = "createAT", direction = Direction.DESC) Pageable pageable) {
+    @PageableDefault(sort = "createAt", direction = Direction.DESC) Pageable pageable) {
     return OK(clubService.getClubPage(pageable));
   }
 

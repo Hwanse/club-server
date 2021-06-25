@@ -1,5 +1,6 @@
 package com.study.clubserver.domain.board;
 
+import com.study.clubserver.api.dto.board.BoardCreateRequest;
 import com.study.clubserver.domain.CommonEntity;
 import com.study.clubserver.domain.club.Club;
 import com.study.clubserver.domain.club.clubAccount.ClubAccount;
@@ -13,11 +14,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @Table(name = "club_board")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Board extends CommonEntity {
 
   @Column(nullable = false)
@@ -37,4 +42,11 @@ public class Board extends CommonEntity {
   @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<Comment> comments = new ArrayList<>();
 
+  public Board(Club club, ClubAccount clubAccount, BoardCreateRequest request) {
+    this.title = request.getTitle();
+    this.content = request.getContent();
+    this.writer = clubAccount;
+    this.club = club;
+    club.getBoards().add(this);
+  }
 }
