@@ -37,6 +37,7 @@ public class CommentCustomRepositoryImpl implements CommentCustomRepository {
       )
       .offset(pageable.getOffset())
       .limit(pageable.getPageSize())
+      .orderBy(comment.createdAt.desc())
       .fetchResults();
 
     return new PageImpl<>(results.getResults(), pageable, results.getTotal());
