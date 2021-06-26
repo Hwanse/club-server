@@ -2,6 +2,7 @@ package com.study.clubserver.domain.board;
 
 import com.study.clubserver.api.dto.board.BoardCreateRequest;
 import com.study.clubserver.domain.CommonEntity;
+import com.study.clubserver.domain.board.comment.Comment;
 import com.study.clubserver.domain.club.Club;
 import com.study.clubserver.domain.club.clubAccount.ClubAccount;
 import java.util.ArrayList;
