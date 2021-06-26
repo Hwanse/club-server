@@ -24,7 +24,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
 
 class CommentControllerTest extends BaseControllerTest {
@@ -180,6 +179,56 @@ class CommentControllerTest extends BaseControllerTest {
            .andExpect(jsonPath("$.data.size").value(size))
            .andExpect(jsonPath("$.data.number").value(page))
            .andExpect(jsonPath("$.data.numberOfElements").exists());
+  }
+
+  @Test
+  @DisplayName("부모 댓글의 대댓글 리스트 조회 API")
+  @WithMockJwtAuthentication
+  public void queryChildComments() throws Exception {
+    // given
+    Club club = setupClub("hwanse");
+
+    Account testUser = createUser("test");
+    clubService.accountJoinToClub(testUser, club.getId());
+
+    BoardCreateRequest boardCreateRequest = boardCreateRequest();
+    Board board = createBoard(club.getId(), testUser.getUserId(), boardCreateRequest);
+
+    long parentCommentId = 1L;
+
+    for (int i = 1; i <= 30; i++) {
+      CommentCreateRequest request = null;
+      if (i > 1) {
+        request = CommentCreateRequest
+          .builder()
+          .content("내용 " + i)
+          .parentCommentId(parentCommentId)
+          .build();
+      } else {
+        request = CommentCreateRequest
+          .builder()
+          .content("내용 " + i)
+          .build();
+      }
+
+      createComment(testUser, club, board, request);
+    }
+
+    // when & then
+    mockMvc.perform(get("/api/clubs/{cluId}/boards/{boardId}/comments/{commentId}/child",
+                        club.getId(), board.getId(), parentCommentId))
+           .andDo(print())
+           .andExpect(status().isOk())
+           .andExpect(jsonPath("$.data[0].id").exists())
+           .andExpect(jsonPath("$.data[0].content").exists())
+           .andExpect(jsonPath("$.data[0].depth").exists())
+           .andExpect(jsonPath("$.data[0].writer.clubAccountId").exists())
+           .andExpect(jsonPath("$.data[0].writer.accountId").exists())
+           .andExpect(jsonPath("$.data[0].writer.userId").exists())
+           .andExpect(jsonPath("$.data[0].writer.userName").exists())
+           .andExpect(jsonPath("$.data[0].writer.role").exists())
+           .andExpect(jsonPath("$.data[0].parentCommentId").value(parentCommentId));
+
   }
 
 }

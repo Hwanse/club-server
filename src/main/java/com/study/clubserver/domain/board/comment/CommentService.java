@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,6 +52,16 @@ public class CommentService {
     List<CommentDto> commentDtoList = commentPage.stream().map(CommentDto::new).collect(Collectors.toList());
 
     return new PageImpl<>(commentDtoList, commentPage.getPageable(), commentPage.getTotalElements());
+  }
+
+  @Transactional(readOnly = true)
+  public List<CommentDto> getChildComments(Long clubId, Long boardId, Long parentId) {
+    getClub(clubId);
+    getBoard(boardId);
+
+    return commentRepository.findChildCommentsWithWriter(boardId, parentId).stream()
+                            .map(CommentDto::new)
+                           .collect(Collectors.toList());
   }
 
   private boolean isChildComment(CommentCreateRequest request) {

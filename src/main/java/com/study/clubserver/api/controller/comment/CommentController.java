@@ -45,4 +45,12 @@ public class CommentController {
     );
   }
 
+  @GetMapping("{commentId}/child")
+  public ApiResult queryChildComments(@CurrentAccount Account account, @PathVariable Long clubId,
+    @PathVariable Long boardId, @PathVariable Long commentId) {
+    return OK(
+      commentService.getChildComments(clubId, boardId, commentId)
+    );
+  }
+
 }
