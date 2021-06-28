@@ -45,7 +45,7 @@ public class CommentController {
     );
   }
 
-  @GetMapping("{commentId}/child")
+  @GetMapping("/{commentId}/child")
   public ApiResult queryChildComments(@CurrentAccount Account account, @PathVariable Long clubId,
     @PathVariable Long boardId, @PathVariable Long commentId) {
     return OK(

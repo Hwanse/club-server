@@ -141,22 +141,9 @@ class CommentControllerTest extends BaseControllerTest {
     Board board = createBoard(club.getId(), testUser.getUserId(), boardCreateRequest);
 
     for (int i = 1; i <= 30; i++) {
-      CommentCreateRequest request = null;
-      if (i % 2 == 0) {
-         request = CommentCreateRequest
-          .builder()
-          .content("내용 " + i)
-          .parentCommentId(i - 1L)
-          .build();
+      CommentCreateRequest request = commentCreateRequest(i);
 
-      } else {
-        request = CommentCreateRequest
-          .builder()
-          .content("내용 " + i)
-          .build();
-      }
-
-      createComment(testUser, club, board, request);
+      Comment comment = createComment(testUser, club, board, request);
     }
 
     int size = 10;
@@ -194,29 +181,22 @@ class CommentControllerTest extends BaseControllerTest {
     BoardCreateRequest boardCreateRequest = boardCreateRequest();
     Board board = createBoard(club.getId(), testUser.getUserId(), boardCreateRequest);
 
-    long parentCommentId = 1L;
+    CommentCreateRequest request = commentCreateRequest(1);
+    Comment parent = createComment(testUser, club, board, request);
 
     for (int i = 1; i <= 30; i++) {
-      CommentCreateRequest request = null;
-      if (i > 1) {
-        request = CommentCreateRequest
-          .builder()
-          .content("내용 " + i)
-          .parentCommentId(parentCommentId)
-          .build();
-      } else {
-        request = CommentCreateRequest
-          .builder()
-          .content("내용 " + i)
-          .build();
-      }
+      request = CommentCreateRequest
+        .builder()
+        .content("내용 " + i)
+        .parentCommentId(parent.getId())
+        .build();
 
       createComment(testUser, club, board, request);
     }
 
     // when & then
     mockMvc.perform(get("/api/clubs/{cluId}/boards/{boardId}/comments/{commentId}/child",
-                        club.getId(), board.getId(), parentCommentId))
+                        club.getId(), board.getId(), parent.getId()))
            .andDo(print())
            .andExpect(status().isOk())
            .andExpect(jsonPath("$.data[0].id").exists())
@@ -227,7 +207,7 @@ class CommentControllerTest extends BaseControllerTest {
            .andExpect(jsonPath("$.data[0].writer.userId").exists())
            .andExpect(jsonPath("$.data[0].writer.userName").exists())
            .andExpect(jsonPath("$.data[0].writer.role").exists())
-           .andExpect(jsonPath("$.data[0].parentCommentId").value(parentCommentId));
+           .andExpect(jsonPath("$.data[0].parentCommentId").value(parent.getId()));
 
   }
 
